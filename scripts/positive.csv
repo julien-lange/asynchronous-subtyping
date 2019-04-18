@@ -59,24 +59,24 @@ june1.txt, june2.txt, 0
 offset1.txt, offset2.txt, 0
 innerloop1-dual.txt, innerloop2-dual.txt, 0
 snewex1.txt, snewex2.txt, 0
-recinbranch2.txt, recinbranch1.txt, 0 % 2 trees
-recctxt1.txt, recctxt2.txt, 0 % 2 trees
-alternation1-rec.txt, alternation2-ok-rec.txt, 0 2 trees
-patternthenloop1.txt, patternthenloop2.txt, 0, % 
-forall1.txt, forall2.txt, 0, % same as patternthenloop<1-2>.txt
-july1.txt, july2.txt, 0, % similar to patternthenloop<1-2>.txt
-september1.txt, september2.txt, 0, %
-decidablilityex1.txt, decidablilityex2.txt, 0 % exit points / no good candidate / not sure why one candidate is False
-ctxta1.txt, ctxta2.txt, 0, % EXIT POINTS (no good candidate)
-ctxtb1.txt, ctxtb2.txt, 0, % EXIT POINTS (no good candidate)
-badseq1.txt, badseq2.txt, 0, % CANDIDATE TREE IS TOO SMALL? (embedding ko)
-smallinnerloop1.txt, innerloop2.txt, 0, % No good candidate -- DOES THIS COUNT AS EXIT POINT?
-innerloop1.txt, innerloop2.txt, 0, % No embedding
-march3testa1.txt, march3testa2.txt, 0, % sync conf in candidate
-march3testa1.txt, march3testb2.txt, 0, % no tree embedding increase dist here
-twinstar.txt, ex2.txt, 0, % no tree embedding
-mario-b.txt, ex2.txt, 0, % no tree embedding
-expensive1.txt, expensive2.txt, 0, % no embedding
-14may2.txt, 14may1.txt, 0, % exit points / bad conf 
-aaaaaab1.txt, aaaaaab2.txt, 0, % exit points / no good candidate
-ex1-ok-loop.txt, ex2-ok-loop.txt, 0, % one bad candidate, none are embedded
+recinbranch2.txt, recinbranch1.txt, 0
+recctxt1.txt, recctxt2.txt, 0 
+alternation1-rec.txt, alternation2-ok-rec.txt, 0
+patternthenloop1.txt, patternthenloop2.txt, 0,
+forall1.txt, forall2.txt, 0,
+july1.txt, july2.txt, 0, 
+september1.txt, september2.txt, 0
+decidablilityex1.txt, decidablilityex2.txt,
+ctxta1.txt, ctxta2.txt, 0, % Context free-like --  No canditate subtrees and no compa
+ctxtb1.txt, ctxtb2.txt, 0, % Context free-like -- No canditate subtrees and "exit points"
+badseq1.txt, badseq2.txt, 0, % Increasing distance between messages -- Candidate subtree but no compa
+smallinnerloop1.txt, innerloop2.txt, 0, %  No canditate subtrees and no compa (why?)
+innerloop1.txt, innerloop2.txt, 0, % Candidate subtree, but no compa (Finish too early)
+march3testa1.txt, march3testa2.txt, 0, % No canditate subtrees and no compa
+march3testa1.txt, march3testb2.txt, 0, % Candidate subtree, but no compa
+twinstar.txt, ex2.txt, 0, % 2 candidate subtrees, but not compa
+mario-b.txt, ex2.txt, 0, %  2 candidate subtrees, but not compa
+expensive1.txt, expensive2.txt, 0, %  Candidate subtree, but no compa (Finish too early)
+14may2.txt, 14may1.txt, 0, %  Candidate subtree, but no compa (exit points)
+aaaaaab1.txt, aaaaaab2.txt, 0, % Candidate subtree, but no compa (exit points)
+ex1-ok-loop.txt, ex2-ok-loop.txt, 0, %  2 candidate subtrees, but not compa

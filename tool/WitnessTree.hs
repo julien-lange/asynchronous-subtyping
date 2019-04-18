@@ -353,7 +353,7 @@ extract (a:as) (T xs) (T ys)
 
 sameTop :: InputTree -> InputTree -> Bool
 sameTop (Q q) (Q q') = q==q'
-sameTop (T xs) (T ys) = (L.map fst xs) == (L.map fst ys)
+sameTop (T xs) (T ys) = (S.fromList $ L.map fst xs) == (S.fromList $ L.map fst ys)
 sameTop _ _ = False
 
 -- returns a pair (ni, nj) if there's one
