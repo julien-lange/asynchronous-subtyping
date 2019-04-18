@@ -11,7 +11,7 @@ Depending on your setup, you might need to extra Haskell packages (GHC and Googl
 
 ## Compiling and running the tool
 
-Here, we assume that you are in the `tool` sub-directory.
+Here, we assume that you have a terminal open and that you are in the `tool` sub-directory.
 
 ### Compile:
 
@@ -26,3 +26,6 @@ Here, we assume that you are in the `tool` sub-directory.
 * Remove the `-T` flag if you want to print graphs (this might take a while in some cases)
 
 #### Interactive mode
+
+
+* Run the following to check whether T1 is a subtype of T2  `./Checker -T 'T1' 'T2'`
