@@ -1,0 +1,198 @@
+----------------POSITIVE----------------
+Testing:  ../tool/Checker ../tests/alceste-T.txt ../tests/alceste-U.txt
+Testing:  ../tool/Checker ../tests/mixed1.txt ../tests/mixed2.txt
+Testing:  ../tool/Checker ../tests/alcestewiki1.txt ../tests/alcestewiki2.txt
+Testing:  ../tool/Checker ../tests/async1.txt ../tests/async2.txt
+Testing:  ../tool/Checker ../tests/async2.txt ../tests/async3.txt
+Testing:  ../tool/Checker ../tests/async1.txt ../tests/async3.txt
+Testing:  ../tool/Checker ../tests/async1choice.txt ../tests/async2choice.txt
+Testing:  ../tool/Checker ../tests/doublerec.txt ../tests/doublerec2.txt
+Testing:  ../tool/Checker ../tests/doublerec.txt ../tests/singlerex.txt
+Testing:  ../tool/Checker ../tests/singlerex.txt ../tests/doublerec2.txt
+Testing:  ../tool/Checker ../tests/singlerex.txt ../tests/doublerec3.txt
+Testing:  ../tool/Checker ../tests/singlerex.txt ../tests/doublerec4.txt
+Testing:  ../tool/Checker ../tests/singlerex.txt ../tests/doublerec5.txt
+Testing:  ../tool/Checker ../tests/singlerex.txt ../tests/doublerec6.txt
+Testing:  ../tool/Checker ../tests/gchat1.txt ../tests/gchat2.txt
+Testing:  ../tool/Checker ../tests/heavy1.txt ../tests/heavy2.txt
+Testing:  ../tool/Checker ../tests/heavy2.txt ../tests/heavy1.txt
+Testing:  ../tool/Checker ../tests/lessinternal.txt ../tests/moreinternal.txt
+Testing:  ../tool/Checker ../tests/moreexternal.txt ../tests/lessexternal.txt
+Testing:  ../tool/Checker ../tests/norec.txt ../tests/rec.txt
+Testing:  ../tool/Checker ../tests/testa.txt ../tests/testb.txt
+Testing:  ../tool/Checker ../tests/test1.txt ../tests/test2.txt
+Testing:  ../tool/Checker ../tests/test2.txt ../tests/test3.txt
+Testing:  ../tool/Checker ../tests/test1.txt ../tests/test3.txt
+Testing:  ../tool/Checker ../tests/wikiv2-1.txt ../tests/wikiv2-2.txt
+Testing:  ../tool/Checker ../tests/wikiv2-1.txt ../tests/wikiv2-3.txt
+Testing:  ../tool/Checker ../tests/singlerexrev.txt ../tests/singlerex.txt
+Testing:  ../tool/Checker ../tests/infinite1seq.txt ../tests/infinite2seq.txt
+Testing:  ../tool/Checker ../tests/singlerexunfold2.txt ../tests/doublerec3.txt
+Testing:  ../tool/Checker ../tests/singlerexunfold.txt ../tests/doublerec2.txt
+Testing:  ../tool/Checker ../tests/singlerexunfold.txt ../tests/doublerec3.txt
+Testing:  ../tool/Checker ../tests/singlerexunfold.txt ../tests/doublerec4.txt
+Testing:  ../tool/Checker ../tests/singlerexunfold.txt ../tests/doublerec6.txt
+Testing:  ../tool/Checker ../tests/baba.txt ../tests/bbaa.txt
+Testing:  ../tool/Checker ../tests/alternation1.txt ../tests/alternation2-ok.txt
+Testing:  ../tool/Checker ../tests/goal1.txt ../tests/goal2.txt
+Testing:  ../tool/Checker ../tests/goal2.txt ../tests/goal3.txt
+Testing:  ../tool/Checker ../tests/goal1.txt ../tests/goal3.txt
+Testing:  ../tool/Checker ../tests/goal1-ko.txt ../tests/goal2-ko.txt
+Testing:  ../tool/Checker ../tests/goal1-ko.txt ../tests/goal3-ko.txt
+Testing:  ../tool/Checker ../tests/goal2-ko.txt ../tests/goal3-ko.txt
+Testing:  ../tool/Checker ../tests/goal2rcv1.txt ../tests/goal2rcv2.txt
+Testing:  ../tool/Checker ../tests/goal2rcv1.txt ../tests/goal2rcv2.txt
+Testing:  ../tool/Checker ../tests/goal2rcv1-ko.txt ../tests/goal2rcv2-ko.txt
+Testing:  ../tool/Checker ../tests/multibranch1.txt ../tests/multibranch2.txt
+Testing:  ../tool/Checker ../tests/recaab1.txt ../tests/recaab2.txt
+Testing:  ../tool/Checker ../tests/sendend1-ok.txt ../tests/sendend2.txt
+Testing:  ../tool/Checker ../tests/weakExtChoice1.txt ../tests/weakExtChoice2.txt
+Testing:  ../tool/Checker ../tests/pattern1.txt ../tests/pattern2.txt
+Testing:  ../tool/Checker ../tests/sndrcvorder2.txt ../tests/sndrcvorder1.txt
+Testing:  ../tool/Checker ../tests/reflsnd1.txt ../tests/reflsnd1.txt
+Testing:  ../tool/Checker ../tests/reflrcv2.txt ../tests/reflrcv2.txt
+Testing:  ../tool/Checker ../tests/syncloop1.txt ../tests/syncloop2.txt
+Testing:  ../tool/Checker ../tests/infinite1.txt ../tests/infinite2.txt
+Testing:  ../tool/Checker ../tests/infinitea.txt ../tests/infiniteb.txt
+Testing:  ../tool/Checker ../tests/infinite1extra.txt ../tests/infinite2extra.txt
+Testing:  ../tool/Checker ../tests/gchat1-nonbranch.txt ../tests/gchatrev1-nobranch.txt
+Testing:  ../tool/Checker ../tests/june1.txt ../tests/june2.txt
+Testing:  ../tool/Checker ../tests/offset1.txt ../tests/offset2.txt
+Testing:  ../tool/Checker ../tests/innerloop1-dual.txt ../tests/innerloop2-dual.txt
+Testing:  ../tool/Checker ../tests/snewex1.txt ../tests/snewex2.txt
+Testing:  ../tool/Checker ../tests/recinbranch2.txt ../tests/recinbranch1.txt
+Testing:  ../tool/Checker ../tests/recctxt1.txt ../tests/recctxt2.txt
+Testing:  ../tool/Checker ../tests/alternation1-rec.txt ../tests/alternation2-ok-rec.txt
+Testing:  ../tool/Checker ../tests/patternthenloop1.txt ../tests/patternthenloop2.txt
+Testing:  ../tool/Checker ../tests/forall1.txt ../tests/forall2.txt
+Testing:  ../tool/Checker ../tests/july1.txt ../tests/july2.txt
+Testing:  ../tool/Checker ../tests/september1.txt ../tests/september2.txt
+Testing:  ../tool/Checker ../tests/decidablilityex1.txt ../tests/decidablilityex2.txt
+Testing:  ../tool/Checker ../tests/ctxta1.txt ../tests/ctxta2.txt
+[93m	Unknown![0m
+Testing:  ../tool/Checker ../tests/ctxtb1.txt ../tests/ctxtb2.txt
+[93m	Unknown![0m
+Testing:  ../tool/Checker ../tests/badseq1.txt ../tests/badseq2.txt
+[93m	Unknown![0m
+Testing:  ../tool/Checker ../tests/smallinnerloop1.txt ../tests/innerloop2.txt
+[93m	Unknown![0m
+Testing:  ../tool/Checker ../tests/innerloop1.txt ../tests/innerloop2.txt
+[93m	Unknown![0m
+Testing:  ../tool/Checker ../tests/march3testa1.txt ../tests/march3testa2.txt
+[93m	Unknown![0m
+Testing:  ../tool/Checker ../tests/march3testa1.txt ../tests/march3testb2.txt
+[93m	Unknown![0m
+Testing:  ../tool/Checker ../tests/twinstar.txt ../tests/ex2.txt
+[93m	Unknown![0m
+Testing:  ../tool/Checker ../tests/mario-b.txt ../tests/ex2.txt
+[93m	Unknown![0m
+Testing:  ../tool/Checker ../tests/expensive1.txt ../tests/expensive2.txt
+[93m	Unknown![0m
+Testing:  ../tool/Checker ../tests/14may2.txt ../tests/14may1.txt
+[93m	Unknown![0m
+Testing:  ../tool/Checker ../tests/aaaaaab1.txt ../tests/aaaaaab2.txt
+[93m	Unknown![0m
+Testing:  ../tool/Checker ../tests/ex1-ok-loop.txt ../tests/ex2-ok-loop.txt
+[93m	Unknown![0m
+[1mFailed: 0 / Unknown: 13
+Summary:  69 / 82  passed.[0m
+----------------NEGATIVE----------------
+Testing:  ../tool/Checker ../tests/swap1.txt ../tests/swapko.txt
+Testing:  ../tool/Checker ../tests/swapko.txt ../tests/swap1.txt
+Testing:  ../tool/Checker ../tests/swap2.txt ../tests/swapko.txt
+Testing:  ../tool/Checker ../tests/swapko.txt ../tests/swap2.txt
+Testing:  ../tool/Checker ../tests/swapko2.txt ../tests/swap12.txt
+Testing:  ../tool/Checker ../tests/swap12.txt ../tests/swapko2.txt
+Testing:  ../tool/Checker ../tests/alceste-T.txt ../tests/alceste-V.txt
+Testing:  ../tool/Checker ../tests/alcestewiki2.txt ../tests/alcestewiki1.txt
+Testing:  ../tool/Checker ../tests/async2.txt ../tests/async1.txt
+Testing:  ../tool/Checker ../tests/async3.txt ../tests/async2.txt
+Testing:  ../tool/Checker ../tests/async3.txt ../tests/async1.txt
+Testing:  ../tool/Checker ../tests/async2choice.txt ../tests/async1choice.txt
+Testing:  ../tool/Checker ../tests/doublerec2.txt ../tests/doublerec.txt
+Testing:  ../tool/Checker ../tests/singlerex.txt ../tests/doublerec.txt
+Testing:  ../tool/Checker ../tests/doublerec2.txt ../tests/singlerex.txt
+Testing:  ../tool/Checker ../tests/doublerec3.txt ../tests/singlerex.txt
+Testing:  ../tool/Checker ../tests/gchat2.txt ../tests/gchat1.txt
+Testing:  ../tool/Checker ../tests/rec.txt ../tests/norec.txt
+Testing:  ../tool/Checker ../tests/testb.txt ../tests/testa.txt
+Testing:  ../tool/Checker ../tests/test2.txt ../tests/test1.txt
+Testing:  ../tool/Checker ../tests/test3.txt ../tests/test2.txt
+Testing:  ../tool/Checker ../tests/test3.txt ../tests/test1.txt
+Testing:  ../tool/Checker ../tests/infinite1.txt ../tests/bad.txt
+Testing:  ../tool/Checker ../tests/simp.txt ../tests/bad.txt
+Testing:  ../tool/Checker ../tests/bad.txt ../tests/simp.txt
+Testing:  ../tool/Checker ../tests/infinite1.txt ../tests/infinite1seq.txt
+Testing:  ../tool/Checker ../tests/infinite1.txt ../tests/infinite2seq.txt
+Testing:  ../tool/Checker ../tests/infinite2.txt ../tests/infinite1seq.txt
+Testing:  ../tool/Checker ../tests/infinite2.txt ../tests/infinite2seq.txt
+Testing:  ../tool/Checker ../tests/infinite2seq.txt ../tests/infinite2.txt
+Testing:  ../tool/Checker ../tests/infinite1seq.txt ../tests/infinite2.txt
+Testing:  ../tool/Checker ../tests/infinite2seq.txt ../tests/infinite1.txt
+Testing:  ../tool/Checker ../tests/infinite1seq.txt ../tests/infinite1.txt
+Testing:  ../tool/Checker ../tests/bbaa.txt ../tests/baba.txt
+Testing:  ../tool/Checker ../tests/gchatrev1.txt ../tests/gchat2.txt
+Testing:  ../tool/Checker ../tests/gchatrev1.txt ../tests/gchat1.txt
+Testing:  ../tool/Checker ../tests/alternation1.txt ../tests/alternation2.txt
+Testing:  ../tool/Checker ../tests/alternation1rcv.txt ../tests/alternation2rcv.txt
+Testing:  ../tool/Checker ../tests/mixed2.txt ../tests/mixed1.txt
+Testing:  ../tool/Checker ../tests/goal1.txt ../tests/goal1-ko.txt
+Testing:  ../tool/Checker ../tests/goal1.txt ../tests/goal2-ko.txt
+Testing:  ../tool/Checker ../tests/goal2.txt ../tests/goal3-ko.txt
+Testing:  ../tool/Checker ../tests/goal1.txt ../tests/goal3-ko.txt
+Testing:  ../tool/Checker ../tests/goal1-ko.txt ../tests/goal2.txt
+Testing:  ../tool/Checker ../tests/goal1-ko.txt ../tests/goal3.txt
+Testing:  ../tool/Checker ../tests/goal2rcv1-ko.txt ../tests/goal2rcv2.txt
+Testing:  ../tool/Checker ../tests/goal2rcv1.txt ../tests/goal2rcv2-ko.txt
+Testing:  ../tool/Checker ../tests/multibranch2.txt ../tests/multibranch1.txt
+Testing:  ../tool/Checker ../tests/sendend1.txt ../tests/sendend2.txt
+Testing:  ../tool/Checker ../tests/weakExtChoice2.txt ../tests/weakExtChoice1.txt
+Testing:  ../tool/Checker ../tests/nestedrec1-ko.txt ../tests/nestedrec2.txt
+Testing:  ../tool/Checker ../tests/mess1.txt ../tests/mess2.txt
+Testing:  ../tool/Checker ../tests/messa1.txt ../tests/messa2.txt
+Testing:  ../tool/Checker ../tests/sndrcvorder1.txt ../tests/sndrcvorder2.txt
+Testing:  ../tool/Checker ../tests/stackabb1.txt ../tests/stackba2.txt
+Testing:  ../tool/Checker ../tests/stackba2.txt ../tests/stackabb1.txt
+Testing:  ../tool/Checker ../tests/lgg1.txt ../tests/lgg2.txt
+Testing:  ../tool/Checker ../tests/lgg2.txt ../tests/lgg1.txt
+Testing:  ../tool/Checker ../tests/zzabb1.txt ../tests/zzba1.txt
+Testing:  ../tool/Checker ../tests/zzabb2.txt ../tests/zzba2.txt
+Testing:  ../tool/Checker ../tests/loop1.txt ../tests/loop2.txt
+Testing:  ../tool/Checker ../tests/loop2.txt ../tests/loop1.txt
+Testing:  ../tool/Checker ../tests/moreinternal.txt ../tests/lessinternal.txt
+Testing:  ../tool/Checker ../tests/lessexternal.txt ../tests/moreexternal.txt
+Testing:  ../tool/Checker ../tests/alceste-V.txt ../tests/alceste-U.txt
+Testing:  ../tool/Checker ../tests/alceste-U-dual.txt ../tests/alceste-V-dual.txt
+Testing:  ../tool/Checker ../tests/gchat2.txt ../tests/gchatrev1.txt
+Testing:  ../tool/Checker ../tests/recaab2.txt ../tests/recaab1.txt
+Testing:  ../tool/Checker ../tests/recctxt1-ko.txt ../tests/recctxt2.txt
+Testing:  ../tool/Checker ../tests/alternation1-rec.txt ../tests/alternation2-rec.txt
+Testing:  ../tool/Checker ../tests/nestedrec1.txt ../tests/nestedrec2-ko.txt
+Testing:  ../tool/Checker ../tests/minirec1.txt ../tests/minirec2.txt
+Testing:  ../tool/Checker ../tests/blacktriinside1.txt ../tests/blacktriinside2.txt
+Testing:  ../tool/Checker ../tests/blacktriinside2.txt ../tests/blacktriinside1.txt
+Testing:  ../tool/Checker ../tests/pattern1ko.txt ../tests/pattern2.txt
+Testing:  ../tool/Checker ../tests/patternako.txt ../tests/patternb.txt
+Testing:  ../tool/Checker ../tests/alceste-U.txt ../tests/alceste-V.txt
+Testing:  ../tool/Checker ../tests/nestedrec1.txt ../tests/nestedrec2.txt
+Testing:  ../tool/Checker ../tests/alceste-V-dual.txt ../tests/alceste-U-dual.txt
+Testing:  ../tool/Checker ../tests/minirec2.txt ../tests/minirec1.txt
+Testing:  ../tool/Checker ../tests/gchat1.txt ../tests/gchatrev1.txt
+Testing:  ../tool/Checker ../tests/stateidx1.txt ../tests/stateidx2.txt
+Testing:  ../tool/Checker ../tests/july2.txt ../tests/july1.txt
+Testing:  ../tool/Checker ../tests/decidablilityex2.txt ../tests/decidablilityex1.txt
+Testing:  ../tool/Checker ../tests/ctxtb2.txt ../tests/ctxtb1.txt
+Testing:  ../tool/Checker ../tests/ctxta2.txt ../tests/ctxta1.txt
+Testing:  ../tool/Checker ../tests/september2.txt ../tests/september1.txt
+Testing:  ../tool/Checker ../tests/innerloop2-dual.txt ../tests/innerloop1-dual.txt
+Testing:  ../tool/Checker ../tests/expensive2.txt ../tests/expensive1.txt
+Testing:  ../tool/Checker ../tests/aaaaaab2.txt ../tests/aaaaaab1.txt
+Testing:  ../tool/Checker ../tests/badseq2.txt ../tests/badseq1.txt
+Testing:  ../tool/Checker ../tests/ex1.txt ../tests/ex2.txt
+[93m	Unknown![0m
+[1mFailed: 0 / Unknown: 1
+Summary:  91 / 92  passed.[0m
+[1m----------------------------------
+Failed: 0 / Unknown: 14
+Overall summary:  160 / 174  passed.
+----------------------------------[0m

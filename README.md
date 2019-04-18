@@ -67,3 +67,5 @@ It will also print something like:
 In the 'script' sub-directory, run `./runtest.py`. This will print the results of 174 tests.
 
 
+
+### For reference, the current version (18/04/2019) prints the results in `scripts/latest-tests.txt`.
