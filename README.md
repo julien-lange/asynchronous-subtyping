@@ -27,5 +27,10 @@ Here, we assume that you have a terminal open and that you are in the `tool` sub
 
 #### Interactive mode
 
-
+5
 * Run the following to check whether T1 is a subtype of T2  `./Checker -T 'T1' 'T2'`
+
+where  T1 and T2 are session types written as follows:
+
+- `rec X . !a; [?d;X, ?x;!b;X]`
+- `rec X. [!a;[?x;X, ?d;X], !b;[?x;X, ?d;X]]`
