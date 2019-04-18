@@ -9,16 +9,20 @@ You will need [GHC](https://www.haskell.org/platform/) and [GraphViz (dot)](http
 Depending on your setup, you might need to extra Haskell packages (GHC and Google will help you figure these out and you can install them with `cabal`).
 
 
-## Compile:
+## Compiling and running the tool
+
+Here, we assume that you are in the `tool` sub-directory.
+
+### Compile:
 
 * Run: `ghc Checker`
 
-## Usage
+### Usage
 
-### Passive mode
+#### Passive mode
 
 * Run the following to check whether T1 is a subtype of T2  `./Checker -T <path-to-T1> <path-to-T2>`
 
 * Remove the `-T` flag if you want to print graphs (this might take a while in some cases)
 
-### Interactive mode
+#### Interactive mode
