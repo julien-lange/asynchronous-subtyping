@@ -351,10 +351,8 @@ extract (a:as) (T xs) (T ys)
       extract as (nextIT (T xs) a) (nextIT (T ys) a)
   | otherwise = False
 
-sameTop :: InputTree -> InputTree -> Bool
-sameTop (Q q) (Q q') = q==q'
-sameTop (T xs) (T ys) = (S.fromList $ L.map fst xs) == (S.fromList $ L.map fst ys)
-sameTop _ _ = False
+
+
 
 -- returns a pair (ni, nj) if there's one
 getAncestorPair :: [IValue] -> IValue -> Maybe (IValue, IValue)
@@ -370,8 +368,6 @@ getAncestorPair xs v =
           (t1==t2)
           ||
           (
-            -- (sameTop t1 t2)     
-            -- &&
             ((S.fromList $ leavesIT t1) `isSubsetOf` (S.fromList $ leavesIT t2))
           )
         )
