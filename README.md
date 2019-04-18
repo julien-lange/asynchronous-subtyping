@@ -57,11 +57,8 @@ When you set the `--pics` flag, the tool generates the following files in the cu
 It will also print something like:
 
 `Finite subtrees: [False,False]  --> none of the subtrees are 'finite'
-
 Canditate subtrees: [True,True] --> all subtrees are 'candidate')
-
 Compatibility: [True,True] --> all subtrees validate the 'compatibilty' requirement
-
 2 producers/consummers printed. --> how many pti/cti.png are generated`
 
 
