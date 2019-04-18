@@ -40,6 +40,7 @@ data Subtyping = Subtyping
                  , sup :: String
                  , bound :: Int
                  , nomin :: Bool
+                 , pics :: Bool
                  }
                deriving (Data,Typeable,Show,Eq)
 submodes =  enum
@@ -58,7 +59,10 @@ subargs = Subtyping
  , bound = def &= opt "30"  &= argPos 2  &= typ "INT"
  , nomin = def
            &= explicit &= name "nomin"
-           &= help "Don't minimize machines"      
+           &= help "Don't minimize machines"
+ , pics = def
+           &= explicit &= name "pics"
+           &= help "Print graphs (.dot and .png files)"   
  }  &= help "Asynchronous session subtyping"
 
 
@@ -89,7 +93,7 @@ main = do
                 do
                   start <- getCurrentTime
                   --
-                  checkingAlgorithm ((typingmode pargs) /= TestAsync )  (nomin pargs) (bound pargs) subans supans
+                  checkingAlgorithm (pics pargs)  (nomin pargs) (bound pargs) subans supans
                   --
                   end <- getCurrentTime
                   if (typingmode pargs) /= TestAsync
