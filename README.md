@@ -3,10 +3,10 @@
 
 ## Requirements:
 
-You will need [GHC](https://www.haskell.org/platform/) and [GraphViz (dot)](https://www.graphviz.org/) installed on your machine (the last one is only required to generate graphs).
+You will need [ghc](https://www.haskell.org/platform/) and [GraphViz (dot)](https://www.graphviz.org/) installed on your machine (the last one is only required to generate graphs).
 
 
-Depending on your setup, you might need to extra Haskell packages (GHC and Google will help you figure these out and you can install them with `cabal`).
+Depending on your setup, you might need to install extra Haskell packages (GHC's complaints will help you figure these out and you can install them with `cabal`).
 
 
 ## Compiling and running the tool
@@ -41,7 +41,7 @@ where T1 and T2 are session types as in the files.
 * Example `./Checker -iT '!a;?b;end' '?b;!a;end'`
 
 
-In both both, the tool says *True* if T1 is a subtype of T2, *False* if not, and *Maybe* if the tool is not quite sure.
+In both mode, the tool says *True* if T1 is a subtype of T2, *False* if not, and *Maybe* if the tool is not quite sure.
 
 ## Running the tests
 
