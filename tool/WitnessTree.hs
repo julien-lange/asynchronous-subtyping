@@ -171,7 +171,7 @@ checkingAlgorithm debug nomin bound t u =
                                  else putStrLn $ "Maybe"
                                when debug $ do putStrLn $ "Finite subtrees: "++(show fi)
                                                putStrLn $ "Canditate subtrees: "++(show sct)
-                                               putStrLn $ "Tree embedding: "++(show embs)
+                                               putStrLn $ "Compatibility: "++(show embs)
                                                --
                                                writeToFile "simulation_tree.dot" (printTrees mp [t])
                                                mkPicture "simulation_tree.dot" "simulation_tree.png"
