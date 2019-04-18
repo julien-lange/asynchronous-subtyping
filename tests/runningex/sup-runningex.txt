@@ -1,0 +1,1 @@
+rec X. [!HQ;[?OK;X, ?KO;X], !LQ;[?OK;X, ?KO;X]]
