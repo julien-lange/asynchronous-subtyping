@@ -446,7 +446,36 @@ goodAccumulation m1 m2 mpans t =
   (allPathReceive mpans t)
   &&
   (strictAccumulation m2 mpans t)
+  &&
+  (strictAccumulationBetweenAncestors m2 mpans t)
 
+getAllPathsBetweenAncestors :: [IValue] -> CTree -> [([TLabel], IValue)]
+getAllPathsBetweenAncestors ancs (Node v []) = []
+getAllPathsBetweenAncestors ancs (Node v ys) 
+  | v `L.elem` ancs = [([],v)]
+  | otherwise = 
+    concat $ L.map (\x -> let ps = getAllPathsBetweenAncestors ancs (snd x)
+                          in L.map (\(p,n) -> ((fst x):p,n)) ps
+                   ) ys 
+        
+strictAccumulationBetweenAncestors :: Machine -> Ancestors -> CTree -> Bool
+strictAccumulationBetweenAncestors  m mp t = helper (M.elems mp) t
+  where helper ancs t@(Node n@(i,(p,it)) xs)
+          | n `L.elem` ancs =
+              let quants = [(qi, path, n', it) | (path, n') <- getAllPathsBetweenAncestors ancs t, qi <- leavesIT it]
+              in and $ L.map 
+                 (\(qi,psi,n'@(i',(p',it')),it) -> 
+                   (
+                     case leavesIT <$> accTree m qi (sndProj psi) of
+                      Nothing -> False
+                      Just ss -> (S.fromList ss)
+                                 `isSubsetOf` 
+                                 (S.fromList $ leavesIT it')
+                   )
+                 )
+                 quants
+         
+          | otherwise = and $ L.map ((helper ancs) . snd) xs
 
 allPathReceive :: Ancestors -> CTree -> Bool
 allPathReceive ancs t = helper (M.elems ancs) t
