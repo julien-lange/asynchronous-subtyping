@@ -147,42 +147,54 @@ genConsumeEnvi ancs t = M.fromList $ helper t
         trsucc (Node v xs) = v
         cont xs = concat $ L.map (helper . snd) xs
             
-            
-checkingAlgorithm ::  Bool ->  Bool -> Int -> LocalType -> LocalType -> IO ()
-checkingAlgorithm debug nomin bound t u =
-  let m1 = type2Machine nomin "-" t
-      m2 = type2Machine nomin "+" u
-      res = buildTree m1 m2 [] "0" (tinit m1, Q $ tinit m2 )
+checkingAlgorithm :: Bool ->  Bool -> Int -> LocalType -> LocalType -> IO ()
+checkingAlgorithm debug nomin bound t1 t2 =
+  let m1 = type2Machine nomin "-" t1
+      m2 = type2Machine nomin "+" t2        
+  in do res <- fullCheck debug nomin "" m1 m2
+        case res of
+          Just True -> putStrLn "True"
+          Just False -> putStrLn "False"
+          Nothing -> do rres <- fullCheck debug nomin "rev_" (dualMachine m2)  (dualMachine m1)
+                        case rres of 
+                          Just True -> putStrLn "True"
+                          Just False -> putStrLn "False"
+                          Nothing -> putStrLn "Maybe"
+                          
+
+
+fullCheck ::  Bool -> Bool -> String -> Machine -> Machine -> IO (Maybe Bool)
+fullCheck debug nomin pref m1 m2 =
+  let res = buildTree m1 m2 M.empty [] "0" (tinit m1, Q $ tinit m2 )
   in do when debug $ do machine2file m1 "m1"
                         machine2file m2 "m2"
-                        mkPicture "m1_cfsm.dot" "m1.png"
-                        mkPicture "m2_cfsm.dot" "m2.png"
-                        -- putStrLn $ show res
+                        mkPicture "m1_cfsm.dot" (pref++"m1.png")
+                        mkPicture "m2_cfsm.dot" (pref++"m2.png")
         case res of
-         Nothing -> putStrLn "False"
-         Just (t, mp) -> let ct = mkCandidateSubtrees mp t
-                             sct = L.map (isSafeSubTree m1 m2 mp) ct
-                             fi = L.map (isFinite m1 m2 mp) ct
-                             produce = L.map (genProduceEnvi m2 mp) ct
-                             consume = L.map (genConsumeEnvi mp)  ct
-                             embs = L.map (checkEmbedding nomin m2 mp) ct
-                         in do if and $ L.map (\(x,y,z) -> x || (y && z)) $ zip3 fi sct embs
-                                 then putStrLn $ "True"
-                                 else putStrLn $ "Maybe"
-                               when debug $ do putStrLn $ "Finite subtrees: "++(show fi)
-                                               putStrLn $ "Canditate subtrees: "++(show sct)
-                                               putStrLn $ "Compatibility: "++(show embs)
-                                               --
-                                               writeToFile "simulation_tree.dot" (printTrees mp [t])
-                                               mkPicture "simulation_tree.dot" "simulation_tree.png"
-                                               writeToFile "candidate_trees.dot" (printTrees mp ct)
-                                               mkPicture "candidate_trees.dot" "candidate_trees.png"
-                                               --
-                                               genEIT nomin m2 mp ct
+         Nothing -> return $ Just False
+         Just (vs, t, mp) -> let ct = mkCandidateSubtrees mp t
+                                 sct = L.map (isSafeSubTree m1 m2 mp) ct
+                                 fi = L.map (isFinite m1 m2 mp) ct
+                                 produce = L.map (genProduceEnvi m2 mp) ct
+                                 consume = L.map (genConsumeEnvi mp)  ct
+                                 embs = L.map (checkEmbedding nomin m2 mp) ct
+                             in do when debug $ do putStrLn $ "Finite subtrees: "++(show fi)
+                                                   putStrLn $ "Canditate subtrees: "++(show sct)
+                                                   putStrLn $ "Tree embedding: "++(show embs)
+                                                   --
+                                                   writeToFile "simulation_tree.dot" (printTrees mp [t])
+                                                   mkPicture "simulation_tree.dot" (pref++"simulation_tree.png")
+                                                   writeToFile "candidate_trees.dot" (printTrees mp ct)
+                                                   mkPicture "candidate_trees.dot" (pref++"candidate_trees.png")
+                                                   --
+                                                   genEIT nomin pref m2 mp ct
+                                                   
+                                   if and $ L.map (\(x,y,z) -> x || (y && z)) $ zip3 fi sct embs
+                                     then return $ Just True
+                                     else return Nothing 
 
-          
-genEIT :: Bool -> Machine -> Ancestors -> [CTree] -> IO ()         
-genEIT nomin m2 mp ts = helper 1 ts 
+genEIT :: Bool -> String -> Machine -> Ancestors -> [CTree] -> IO ()         
+genEIT nomin pref m2 mp ts = helper 1 ts 
   where helper i [] = putStrLn $ (show $ i-1)++" producers/consummers printed."
         helper i (x:xs) =
           do let pt = genProduceEnvi m2 mp x
@@ -192,11 +204,10 @@ genEIT nomin m2 mp ts = helper 1 ts
              if (isJust eqc) && (isJust eqt)
                then do machine2file (fromJust eqt) ("pt"++(show i))
                        machine2file (fromJust eqc) ("ct"++(show i))
-                       mkPicture ("pt"++(show i)++"_cfsm.dot") ("pt"++(show i)++".png")
-                       mkPicture ("ct"++(show i)++"_cfsm.dot") ("ct"++(show i)++".png")
+                       mkPicture ("pt"++(show i)++"_cfsm.dot") (pref++"pt"++(show i)++".png")
+                       mkPicture ("ct"++(show i)++"_cfsm.dot") (pref++"ct"++(show i)++".png")
                        helper (i+1) xs
                else helper (i+1) xs
-
 
 mkProdRoot :: CTree -> (State, IValue)
 mkProdRoot x = ("ROOT", label x)
@@ -314,29 +325,44 @@ addTree mp (T xs) = T $ L.map (\(a,t) -> (a, addTree mp t)) xs
 
 
 
-buildTree :: Machine -> Machine -> [(IValue, TLabel)] -> String -> Value -> Maybe (CTree, Map IValue IValue)
-buildTree m1 m2 ps i val
+type TreeMap = Map IValue [(TLabel, CTree)]
+
+buildTree :: Machine -> Machine -> TreeMap -> [(IValue, TLabel)] -> String -> Value -> Maybe (TreeMap, CTree, Map IValue IValue)
+buildTree m1 m2 sibs ps i val
   | val `L.elem` (L.map (snd . fst) ps) =
       let anc = fst . head $ L.filter (\((j,x),y) -> x == val) ps
-      in Just (Node (i, val) [], M.singleton (i, val) anc)
+      in Just (M.empty, Node (i, val) [], M.singleton (i, val) anc)
+         
+  | val `L.elem` (L.map snd $ M.keys sibs) = 
+        let sibling = head $ L.filter (\(j,x) -> x == val) $ M.keys sibs
+        in Just (M.empty, Node sibling (sibs M.! sibling), M.empty)
+         
+           
   | otherwise =
   case getAncestorPair (L.map fst ps) (i,val) of
    Nothing -> cont
    Just (ni,nj) -> if extract (getIntermPath ps ni nj) (snd . snd $ ni) (snd val)
-                   then Just (Node (i, val) [], M.singleton (i, val) ni)
+                   then Just (M.empty, Node (i, val) [], M.singleton (i, val) ni)
                    else cont
   where cont = case oneStep m1 m2 val of
           Nothing -> Nothing
-          Just next -> let rets = snd $
-                                  mapAccumL
-                                  (\j (x,y) -> (j+1, (x, buildTree m1 m2 (ps++[((i, val),x)]) (i++(show $ j+1)) y))) 0 next
-                           chs = L.map (\(x,t) -> case t of
+          Just next -> let rets = snd $ mapAccumL
+                                  (\(j,sbs) (x,y) -> 
+                                    let rbt = buildTree m1 m2 sbs (ps++[((i, val),x)]) (i++(show $ j+1)) y
+                                    in case rbt of
+                                      Nothing -> ((j+1,M.empty), (x, Nothing))
+                                      Just (nsbs, ct, mnp) -> ((j+1, M.unions [nsbs, sbs]), (x, Just (nsbs, ct, mnp)))
+                                  )
+                                  (0, M.empty) next
+                           chs = L.map (\(x, t) -> case t of
                                          Nothing -> Nothing
-                                         Just (t', m') -> Just ((x,t'), m')) rets
+                                         Just (vseen, t', m') -> Just ((x,t'), m')
+                                       ) rets
                        in case sequence chs of
                            Nothing -> Nothing
-                           Just sqs -> Just (Node (i, val) (L.map fst sqs), M.unions $ L.map snd sqs)
+                           Just sqs -> Just (M.singleton (i,val) (L.map fst sqs), Node (i, val) (L.map fst sqs), M.unions $ L.map snd sqs)
                     
+
 
 
 

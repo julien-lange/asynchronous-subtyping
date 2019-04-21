@@ -93,7 +93,7 @@ main = do
                 do
                   start <- getCurrentTime
                   --
-                  checkingAlgorithm (pics pargs)  (nomin pargs) (bound pargs) subans supans
+                  checkingAlgorithm (pics pargs) (nomin pargs) (bound pargs) subans supans
                   --
                   end <- getCurrentTime
                   if (typingmode pargs) /= TestAsync

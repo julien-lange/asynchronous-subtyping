@@ -105,7 +105,15 @@ eClosure dir m q0 = helper [q0] []
             in helper (qs++next) (q:visited)
         helper [] visited = visited
 
-
+dualMachine :: Machine -> Machine
+dualMachine m =  Machine { states = states m
+                         , tinit = tinit m
+                         , transitions = L.map dualTransition $ transitions m
+                         , accepts = []
+                         }
+          where dualTransition (s,(l,t)) = (s, (dualLabel l, t))
+                dualLabel (Send, m) = (Receive, m)
+                dualLabel (Receive, m) = (Send, m)
 
 
 removeEpsilon :: Direction -> Machine -> Machine
