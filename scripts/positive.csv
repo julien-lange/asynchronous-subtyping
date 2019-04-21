@@ -67,16 +67,16 @@ forall1.txt, forall2.txt, 0,
 july1.txt, july2.txt, 0, 
 september1.txt, september2.txt, 0
 decidablilityex1.txt, decidablilityex2.txt,
+smallinnerloop1.txt, innerloop2.txt, 0, %  ok with reverse
+innerloop1.txt, innerloop2.txt, 0, % ok with reverse
+twinstar.txt, ex2.txt, 0, % ok with reverse
+mario-b.txt, ex2.txt, 0, %  ok with reverse
+expensive1.txt, expensive2.txt, 0, % ok with reverse
 ctxta1.txt, ctxta2.txt, 0, % Context free-like --  No canditate subtrees and no compa
 ctxtb1.txt, ctxtb2.txt, 0, % Context free-like -- No canditate subtrees and "exit points"
 badseq1.txt, badseq2.txt, 0, % Increasing distance between messages -- Candidate subtree but no compa
-smallinnerloop1.txt, innerloop2.txt, 0, %  No canditate subtrees and no compa (why?)
-innerloop1.txt, innerloop2.txt, 0, % Candidate subtree, but no compa (Finish too early)
 march3testa1.txt, march3testa2.txt, 0, % No canditate subtrees and no compa
 march3testa1.txt, march3testb2.txt, 0, % Candidate subtree, but no compa
-twinstar.txt, ex2.txt, 0, % 2 candidate subtrees, but not compa
-mario-b.txt, ex2.txt, 0, %  2 candidate subtrees, but not compa
-expensive1.txt, expensive2.txt, 0, %  Candidate subtree, but no compa (Finish too early)
 14may2.txt, 14may1.txt, 0, %  Candidate subtree, but no compa (exit points)
 aaaaaab1.txt, aaaaaab2.txt, 0, % Candidate subtree, but no compa (exit points)
 ex1-ok-loop.txt, ex2-ok-loop.txt, 0, %  2 candidate subtrees, but not compa

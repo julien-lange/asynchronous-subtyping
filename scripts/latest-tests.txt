@@ -68,34 +68,29 @@ Testing:  ../tool/Checker ../tests/forall1.txt ../tests/forall2.txt
 Testing:  ../tool/Checker ../tests/july1.txt ../tests/july2.txt
 Testing:  ../tool/Checker ../tests/september1.txt ../tests/september2.txt
 Testing:  ../tool/Checker ../tests/decidablilityex1.txt ../tests/decidablilityex2.txt
-Testing:  ../tool/Checker ../tests/ctxta1.txt ../tests/ctxta2.txt
-[93m	Unknown![0m
-Testing:  ../tool/Checker ../tests/ctxtb1.txt ../tests/ctxtb2.txt
-[93m	Unknown![0m
-Testing:  ../tool/Checker ../tests/badseq1.txt ../tests/badseq2.txt
-[93m	Unknown![0m
 Testing:  ../tool/Checker ../tests/smallinnerloop1.txt ../tests/innerloop2.txt
-[93m	Unknown![0m
 Testing:  ../tool/Checker ../tests/innerloop1.txt ../tests/innerloop2.txt
-[93m	Unknown![0m
-Testing:  ../tool/Checker ../tests/march3testa1.txt ../tests/march3testa2.txt
-[93m	Unknown![0m
-Testing:  ../tool/Checker ../tests/march3testa1.txt ../tests/march3testb2.txt
-[93m	Unknown![0m
 Testing:  ../tool/Checker ../tests/twinstar.txt ../tests/ex2.txt
-[93m	Unknown![0m
 Testing:  ../tool/Checker ../tests/mario-b.txt ../tests/ex2.txt
-[93m	Unknown![0m
 Testing:  ../tool/Checker ../tests/expensive1.txt ../tests/expensive2.txt
-[93m	Unknown![0m
+Testing:  ../tool/Checker ../tests/ctxta1.txt ../tests/ctxta2.txt
+	Unknown!
+Testing:  ../tool/Checker ../tests/ctxtb1.txt ../tests/ctxtb2.txt
+	Unknown!
+Testing:  ../tool/Checker ../tests/badseq1.txt ../tests/badseq2.txt
+	Unknown!
+Testing:  ../tool/Checker ../tests/march3testa1.txt ../tests/march3testa2.txt
+	Unknown!
+Testing:  ../tool/Checker ../tests/march3testa1.txt ../tests/march3testb2.txt
+	Unknown!
 Testing:  ../tool/Checker ../tests/14may2.txt ../tests/14may1.txt
-[93m	Unknown![0m
+	Unknown!
 Testing:  ../tool/Checker ../tests/aaaaaab1.txt ../tests/aaaaaab2.txt
-[93m	Unknown![0m
+	Unknown!
 Testing:  ../tool/Checker ../tests/ex1-ok-loop.txt ../tests/ex2-ok-loop.txt
-[93m	Unknown![0m
-[1mFailed: 0 / Unknown: 13
-Summary:  69 / 82  passed.[0m
+	Unknown!
+Failed: 0 / Unknown: 8
+Summary:  74 / 82  passed.
 ----------------NEGATIVE----------------
 Testing:  ../tool/Checker ../tests/swap1.txt ../tests/swapko.txt
 Testing:  ../tool/Checker ../tests/swapko.txt ../tests/swap1.txt
@@ -189,10 +184,9 @@ Testing:  ../tool/Checker ../tests/expensive2.txt ../tests/expensive1.txt
 Testing:  ../tool/Checker ../tests/aaaaaab2.txt ../tests/aaaaaab1.txt
 Testing:  ../tool/Checker ../tests/badseq2.txt ../tests/badseq1.txt
 Testing:  ../tool/Checker ../tests/ex1.txt ../tests/ex2.txt
-[93m	Unknown![0m
-[1mFailed: 0 / Unknown: 1
-Summary:  91 / 92  passed.[0m
-[1m----------------------------------
-Failed: 0 / Unknown: 14
-Overall summary:  160 / 174  passed.
-----------------------------------[0m
+Failed: 0 / Unknown: 0
+Summary:  92 / 92  passed.
+----------------------------------
+Failed: 0 / Unknown: 8
+Overall summary:  166 / 174  passed.
+----------------------------------
