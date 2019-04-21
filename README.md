@@ -54,6 +54,10 @@ When you set the `--pics` flag, the tool generates the following files in the cu
 * `candidate_trees.png` is the list of candidate subtrees
 * for each candidate subtree `i`, there will be a pair of files `pti.png` and `cti.png` which are graphical representations of the systems of equations.
 
+If the first pass is inconclusive (i.e., the tool says *Maybe*), then
+another pass is executed to check `dual(T1) < dual(T2)`. In this case,
+the corresponding `.png` files, prefixed by `rev_` will be produced.
+
 It will also print something like:
 
 ```
