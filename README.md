@@ -29,7 +29,7 @@ There are two modes, in the "passive" mode you give the input parameters as file
 
 The files `file-Ti` must contain session of the following shape:
 
-- '!a;?b;end
+- `!a;?b;end`
 - `rec X . !a; [?d;X, ?x;!b;X]`
 - `rec X. [!a;[?x;X, ?d;X], !b;[?x;X, ?d;X]]`
 
