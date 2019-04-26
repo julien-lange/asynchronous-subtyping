@@ -45,7 +45,7 @@ where T1 and T2 are session types, e.g.,
 * `./Checker -i '!a;?b;end' '?b;!a;end'` (add the `--pics` flag to generate graphs)
 
 
-In both mode, the tool says *True* if T1 is a subtype of T2, *False* if not, and *Maybe* if the tool is not quite sure.
+In both modes, the tool says *True* if T1 is a subtype of T2, *False* if not, and *Maybe* if the tool cannot give a definitive answer.
 
 When you set the `--pics` flag, the tool generates the following files in the current directory:
 
