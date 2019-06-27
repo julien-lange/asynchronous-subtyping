@@ -27,7 +27,7 @@ There are two modes, in the "passive" mode you give the input parameters as file
 
 * Add the `--pics` flag if you want to print graphs (this might take a while in some cases)
 
-The files `file-Ti` must contain session of the following shape:
+The files `file-Ti` must contain session types of the following shape:
 
 - `!a;?b;end`
 - `rec X . !a; [?d;X, ?x;!b;X]`
