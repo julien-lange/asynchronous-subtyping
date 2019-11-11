@@ -38,7 +38,8 @@ def runOverRange(minx, maxx):
         with open(name+logfile, "wb") as log_file:
             for x in range(minx,maxx):
                         # GENERATE EXAMPLE
-                        gencmd = subprocess.Popen(["./GenAsyncTypes",str(x),"1"], stdout=subprocess.PIPE)
+                        # gencmd = subprocess.Popen(["./GenAsyncTypes",str(x),"1"], stdout=subprocess.PIPE)
+                        gencmd = subprocess.Popen(["./GenAsyncTypes","1", str(x)], stdout=subprocess.PIPE)
                         print("Test: ",str(x))
                         timings = []
                         nstates = ""

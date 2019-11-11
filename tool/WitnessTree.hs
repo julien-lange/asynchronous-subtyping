@@ -1,3 +1,6 @@
+{-# LANGUAGE DeriveGeneric #-}
+
+
 module WitnessTree where
 
 import Parser
@@ -8,8 +11,11 @@ import System.Process
 
 import Data.List as L
 import Data.Set as S
+-- import Data.HashMap.Strict as M
 import Data.Map as M
 import Data.Maybe
+import GHC.Generics (Generic)
+import Data.Hashable
 
 
 -- DEBUG
@@ -20,14 +26,16 @@ import Debug.Trace
 
 data InputTree = Q State
                | T [(Message, InputTree)]
-                 deriving (Show, Eq, Ord)
+                 deriving (Show, Generic, Eq, Ord)
+
+instance Hashable InputTree where
 
                     
 data CTree = Node
              { label :: IValue
              , children :: [(TLabel, CTree)]
              }
-           deriving (Show, Eq, Ord)
+           deriving (Show, Eq)
                     
 
 type Value = (State, InputTree)
@@ -38,16 +46,22 @@ type NodeMap = Map IValue String
 type Ancestors = Map IValue IValue
 
 
+
+-- instance Ord InputTree where
+--   compare (T _) (Q _) = GT
+--   compare (Q _) (T _) = LT
+--   compare (Q x) (Q y) = compare x y
+--   compare (T xs) (T ys) = EQ -- compare xs ys
+
+
 data EInputTree = XVar XVariable
                 | E [(Message, EInputTree)]
                 | I [EInputTree]
-                deriving (Show, Eq, Ord)
+                deriving (Show, Eq)
                          
 type XVariable = (State, IValue) 
 
 type Envi= Map XVariable EInputTree
-
-
 
   
 allNodes :: CTree -> [IValue]
@@ -96,14 +110,14 @@ genProduceEnvi m ancs t = M.fromList $ (mkProdRoot t, mkEITRoot (label t) (snd $
 mkEITree :: Machine -> Ancestors -> State -> [TLabel] -> IValue -> Maybe EInputTree
 mkEITree m ancs q path leaf =
   do at <- accTree m q (sndProj path)
-     anc <- M.lookup leaf ancs
+     anc <- M.lookup (leaf) ancs
      return $ helper anc at
   where helper anc (Q q') = XVar (q', anc)
         helper anc (T xs) = E $ L.map (\(x,y) -> (x, helper anc y)) xs
 
 
 tr :: State -> Ancestors -> CTree -> Maybe EInputTree
-tr q ancs (Node n []) = (M.lookup n ancs) >>= (\x -> return $ XVar (q, x))
+tr q ancs (Node n []) = (M.lookup (n) ancs) >>= (\x -> return $ XVar (q, x))
 tr q ancs (Node n ys) = Just $ XVar (q, n)
 
 
@@ -141,7 +155,7 @@ genConsumeEnvi ancs t = M.fromList $ helper t
         helper (Node v xs) 
           | isSendTree xs = [(("", v), I $ L.map (\(n,t) -> XVar ("", (trsucc t))) xs)]++(cont xs)
           | otherwise = [(("", v), E $ L.map (\(n,t) -> (snd . snd $ n, XVar ("", (trsucc t)))) xs)]++(cont xs)
-        trsucc (Node v []) = case M.lookup v ancs of
+        trsucc (Node v []) = case M.lookup (v) ancs of
                               Nothing -> error $ "Variable "++(show v)++" not found in ancestors:\n"++(show ancs)++"."
                               Just a -> a
         trsucc (Node v xs) = v
@@ -327,11 +341,11 @@ addTree mp (T xs) = T $ L.map (\(a,t) -> (a, addTree mp t)) xs
 
 type TreeMap = Map IValue [(TLabel, CTree)]
 
-buildTree :: Machine -> Machine -> TreeMap -> [(IValue, TLabel)] -> String -> Value -> Maybe (TreeMap, CTree, Map IValue IValue)
+buildTree :: Machine -> Machine -> TreeMap -> [(IValue, TLabel)] -> String -> Value -> Maybe (TreeMap, CTree, Ancestors)
 buildTree m1 m2 sibs ps i val
   | val `L.elem` (L.map (snd . fst) ps) =
       let anc = fst . head $ L.filter (\((j,x),y) -> x == val) ps
-      in Just (M.empty, Node (i, val) [], M.singleton (i, val) anc)
+      in Just (M.empty, Node (i, val) [], M.singleton ((i, val)) anc)
          
   | val `L.elem` (L.map snd $ M.keys sibs) = 
         let sibling = head $ L.filter (\(j,x) -> x == val) $ M.keys sibs
@@ -342,7 +356,7 @@ buildTree m1 m2 sibs ps i val
   case getAncestorPair (L.map fst ps) (i,val) of
    Nothing -> cont
    Just (ni,nj) -> if extract (getIntermPath ps ni nj) (snd . snd $ ni) (snd val)
-                   then Just (M.empty, Node (i, val) [], M.singleton (i, val) ni)
+                   then Just (M.empty, Node (i, val) [], M.singleton ((i, val)) ni)
                    else cont
   where cont = case oneStep m1 m2 val of
           Nothing -> Nothing
@@ -425,7 +439,7 @@ mkPicture file output =
         return ()
 
 
-mkCandidateSubtrees :: Map IValue IValue -> CTree -> [CTree]
+mkCandidateSubtrees :: Ancestors -> CTree -> [CTree]
 mkCandidateSubtrees mp t = helper realancs t
   where helper ancs (Node v xs)
           | v `L.elem` ancs = [Node v xs]
@@ -439,7 +453,7 @@ isFinite m1 m2 mp t = helper [] t
   where helper _ (Node (i,v) []) =
           (isFinalConf m1 m2 v)
           ||
-          case M.lookup (i,v) mp of
+          case M.lookup ((i,v)) mp of
            Nothing -> False
            Just (j,n) -> n==v 
         helper seen (Node (i,v) xs)
@@ -588,12 +602,12 @@ eqsToAutomata nomin envi t =
         comb a (Nothing) = Nothing
         mkSilentTrans src i (XVar v) = Just [(src, ((Send, i), printVar v))]
         mkSilentTrans src i t =  
-          let nt = src++"S"++i
+          let nt = src++"S"++(show i)
           in comb (src, ((Send, i), nt)) (mkTrans nt t)   
              
         mkReceiveTrans src a (XVar v) = Just [(src, ((Receive, a), printVar v))]
         mkReceiveTrans src a t = 
-          let nt = src++"R"++a
+          let nt = src++"R"++(show a)
           in comb (src, ((Receive, a), nt)) (mkTrans nt t)
 
         mkTrans :: String -> EInputTree -> Maybe [Transition]
@@ -601,14 +615,14 @@ eqsToAutomata nomin envi t =
           case M.lookup v envi of
           Nothing -> trace ("Variable "++(show v)++" not found.") -- in\n"++(show envi)++".")
                      Nothing
-          Just vv -> Just [(src, ((Send, "_tau_"), printVar v))] 
+          Just vv -> Just [(src, ((Send, mkMessage "0"), printVar v))] 
         mkTrans src (E xs) =
           concat <$> 
           (sequence $ L.map (\(ai,ti) -> mkReceiveTrans src ai ti) xs)
         mkTrans src (I xs) =
           concat <$>
           (sequence $
-           snd $ L.mapAccumL (\i ti -> (i+1, mkSilentTrans src (show i) ti)) 0 xs)
+           snd $ L.mapAccumL (\i ti -> (i+1, mkSilentTrans src (mkMessage $ show i) ti)) 0 xs)
         reachableStates trans seen [] = seen
         reachableStates trans seen (src:xs)
           | src `L.elem` seen = reachableStates trans seen xs
@@ -680,9 +694,9 @@ printGraph i init edges ancestors =
       nmap = mkNodeMap i nodes
       snodes = intercalate "\n" $ L.map (printNode nmap) nodes
       sedges = intercalate "\n" $ L.map (printEdge nmap) edges
-      ancs =  intercalate "\n" $ L.map (printAncestorEdge nmap) $
-              L.filter (\(t,s) -> (t `L.elem` nodes) && (s `L.elem` nodes)) $
-              M.toList ancestors
+      ancs = intercalate "\n" $ L.map (printAncestorEdge nmap) $
+             L.filter (\(t,s) -> (t `L.elem` nodes) && (s `L.elem` nodes)) $
+             M.toList ancestors
   in snodes++"\n"
      ++sedges++"\n"
      ++ancs++"\n"
@@ -705,9 +719,9 @@ printTrees ancs list =  "digraph CTs { \n"++(helper $ snd $ mapAccumL (\x y -> (
                            
 
 printEdgeLabel :: TLabel -> String
-printEdgeLabel (True, (Send, msg)) = "!"++msg
-printEdgeLabel (True, (Receive, msg)) = "?"++msg
-printEdgeLabel (False, (_, msg)) = "["++msg++"]"
+printEdgeLabel (True, (Send, msg)) = "!"++(msg)
+printEdgeLabel (True, (Receive, msg)) = "?"++(msg)
+printEdgeLabel (False, (_, msg)) = "["++(msg)++"]"
 
 
 
@@ -722,7 +736,7 @@ inputForestToHTML [x] = pairToHTML x
 inputForestToHTML xs = "<table color='black' border='1'><tr><td>"++(intercalate "</td><td>" $ L.map pairToHTML xs)++"</td></tr></table>"
 
 pairToHTML :: (Message, InputTree) -> String
-pairToHTML (m, t) = "<table color='black' border='0'><tr><td>"++(m)++"</td></tr>"
+pairToHTML (m, t) = "<table color='black' border='0'><tr><td>"++(show m)++"</td></tr>"
                     ++"<tr><td>"++(inputTreeToHTLM t)++"</td></tr>"
                     ++"</table>"
 
