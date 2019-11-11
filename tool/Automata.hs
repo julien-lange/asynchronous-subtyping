@@ -58,8 +58,8 @@ printMachine m =
                                 "; \n ") $ transitions m
   in header++(foldstring nodes)++(foldstring transi)++footer
   where foldstring s = L.foldr (++) "" s
-        mprintLabel (Send,a) = "!"++(show a)
-        mprintLabel (Receive,a) = "?"++(show a)
+        mprintLabel (Send,a) = "!"++(a)
+        mprintLabel (Receive,a) = "?"++(a)
 
 machine2file :: Machine -> String -> IO ()
 machine2file m f = writeToFile (f++"_cfsm.dot") (printMachine m)

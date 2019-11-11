@@ -736,7 +736,7 @@ inputForestToHTML [x] = pairToHTML x
 inputForestToHTML xs = "<table color='black' border='1'><tr><td>"++(intercalate "</td><td>" $ L.map pairToHTML xs)++"</td></tr></table>"
 
 pairToHTML :: (Message, InputTree) -> String
-pairToHTML (m, t) = "<table color='black' border='0'><tr><td>"++(show m)++"</td></tr>"
+pairToHTML (m, t) = "<table color='black' border='0'><tr><td>"++(m)++"</td></tr>"
                     ++"<tr><td>"++(inputTreeToHTLM t)++"</td></tr>"
                     ++"</table>"
 
