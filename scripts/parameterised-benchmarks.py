@@ -9,8 +9,8 @@ import time
 import csv
 
 
-# Number of iterations
-maxiterations = 4
+# Number of iterations (> 1)
+maxiterations = 3
 
 logfile = "log-file-benchmarks.txt"
 tmpfile = "tmp-cfsm.txt"
@@ -21,7 +21,7 @@ prefname = "parametrised-benchmarks"
 # TIMEOUT (in seconds)
 # cmdtimeout = 360
 # cmdtimeout = 1500 # 25 min
-cmdtimeout = 1500 #
+cmdtimeout = 90 #
 
 
 
@@ -31,16 +31,14 @@ def cleanup():
                     , stderr=subprocess.PIPE)
 
 
-def runOverRange(minx, maxx):
-    name = prefname+"-X-"+str(minx)+"-"+str(maxx)+".csv"
+def runOverRange(sid,minx, maxx, gencmd):
+    name = prefname+"_"+sid+"_"+str(minx)+"-"+str(maxx)+".csv"
     with open(name,"w") as out:    
         write = csv.writer(out) 
         with open(name+logfile, "wb") as log_file:
             for x in range(minx,maxx):
-                        # GENERATE EXAMPLE
-                        # gencmd = subprocess.Popen(["./GenAsyncTypes",str(x),"1"], stdout=subprocess.PIPE)
-                        gencmd = subprocess.Popen(["./GenAsyncTypes","1", str(x)], stdout=subprocess.PIPE)
                         print("Test: ",str(x))
+                        gencmd(x)
                         timings = []
                         nstates = ""
                         ntrans = ""
@@ -74,5 +72,16 @@ def runOverRange(minx, maxx):
 
 
 # Measure growing k with 10 peers
-runOverRange(1, 20)
+
+def moreBs(x):
+    cmd = subprocess.Popen(["./GenAsyncTypes","1", str(x)], stdout=subprocess.PIPE)
+    return cmd 
+
+
+def moreAs(x):
+    cmd = subprocess.Popen(["./GenAsyncTypes",str(x),"1"], stdout=subprocess.PIPE)
+    return cmd
+
+runOverRange("A",1, 20, moreAs)
+runOverRange("B",1, 20, moreBs)
 
