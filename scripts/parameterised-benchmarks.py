@@ -63,7 +63,7 @@ def runOverRange(sid,minx, maxx, gencmd):
                             except subprocess.TimeoutExpired:
                                 kmccmd.kill()
                                 kmccmd.wait()
-                                print("Checker timedout")
+                                print("/!\ Checker timedout, terminating these benchmarks")
                                 return
                         avg = sum(timings)/float(len(timings))
                         write.writerow([x,nstates,ntrans,avg]+timings)

@@ -248,9 +248,10 @@ minHeight :: InputTree -> Int
 minHeight t =  minimum $ L.map fst $ heightIT t 
 
 heightIT :: InputTree -> [(Int, State)]
-heightIT t = nub $ helper 0 t
-  where helper i (T xs) = concat $ L.map (helper (i+1) . snd) xs
-        helper i (Q q) = [(i,q)]
+heightIT t = nub $ helper 0 [] t  
+  where helper i acc (T xs) = concat $ L.map (helper (i+1) acc . snd) xs 
+        helper i acc (Q q) = (i,q):acc
+
 
 hasAccum :: InputTree -> Bool
 hasAccum (T xs) = True

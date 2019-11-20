@@ -44,10 +44,10 @@ def mkPlot(bfile,outpath):
     lspace = np.linspace(0,max(tr))
 
 
-    popt, pcov = curve_fit(fitfunc, linx, liny, bounds=(0, [10, 10, 10]))
+    popt, pcov = curve_fit(fitfunc, linx, liny, bounds=(0, [2, 7, 5]))
 
     print("Fitted curve: "+str(popt))
-    print(pcov)
+    # print(pcov)
 
    
     
@@ -81,7 +81,7 @@ def mkPlot(bfile,outpath):
 
     
     plt.legend(
-         [r'$F(x)=%5.1f * %5.4f^x -%5.1f$' % tuple(popt),
+         [r'$F(x)=%5.5f * %5.4f^x -%5.4f$' % tuple(popt),
             preflegend+legend], loc='best',fontsize=legentfontsize)
 
     plt.ylabel('Time (seconds)',fontsize=axisfontsize)
