@@ -46,14 +46,6 @@ type NodeMap = Map IValue String
 type Ancestors = Map IValue IValue
 
 
-
--- instance Ord InputTree where
---   compare (T _) (Q _) = GT
---   compare (Q _) (T _) = LT
---   compare (Q x) (Q y) = compare x y
---   compare (T xs) (T ys) = EQ -- compare xs ys
-
-
 data EInputTree = XVar XVariable
                 | E [(Message, EInputTree)]
                 | I [EInputTree]
@@ -532,37 +524,47 @@ strictAccumulation m mp t = helper (M.elems mp) t
   where helper ancs t@(Node n@(i,(p,it)) xs)
           | n `L.elem` ancs =
               let quants = [(qi, path, n', it) | (path, n') <- getAllPaths t, qi <- leavesIT it]
-              in and $ L.map 
-                 (\(qi,psi,n'@(i',(p',it')),it) -> 
-                   (
-                     case leavesIT <$> accTree m qi (sndProj psi) of
-                      Nothing -> False
-                      Just ss -> (S.fromList ss)
-                                 `isSubsetOf` 
-                                 (S.fromList $ leavesIT it')
-                   )
-                   &&
-                   (
-                     case closest m (minHeight it) qi (L.map snd psi) of
-                      Nothing -> False
-                      Just h -> h >= (minHeight it)
-                   )
-                 )
-                 quants
+                  leaves = leavesIT it
+                  paths = L.map (\(x1,x2,x3,x4) -> L.map snd x2) quants
+              in
+                (
+                  and $ L.map (\psi -> 
+                                 case closest m (minHeight it) leaves psi of
+                                   Nothing -> False
+                                   Just h -> h >= (minHeight it)
+                              )
+                  paths
+                )
+                &&
+                (
+                  and $ L.map 
+                  (\(qi,psi,n'@(i',(p',it')),it) -> 
+                     (
+                       case leavesIT <$> accTree m qi (sndProj psi) of
+                         Nothing -> False
+                         Just ss -> (S.fromList ss)
+                                    `isSubsetOf` 
+                                    (S.fromList $ leavesIT it')
+                     )                
+                  )
+                  quants
+                )
          
           | otherwise = and $ L.map ((helper ancs) . snd) xs
                         -- 
-                       
-closest :: Machine -> Int -> State -> [Label] -> Maybe Int
-closest m n q [] = Just n
-closest m n q ((Receive, a):xs) = closest m (n-1) q xs
-closest m n q ((Send, a):xs) =
-  (heightIT <$> accTree m q [a])
+-- /!\ This is minAcc() in the the paper!
+closest :: Machine -> Int -> [State] -> [Label] -> Maybe Int
+closest m n qs [] = Just n
+closest m n qs ((Receive, a):xs) = closest m (n-1) qs xs
+closest m n qs ((Send, a):xs) =
+  (
+    sequence $ L.map (\q -> (heightIT <$> accTree m q [a])) qs
+  )
   >>=
   ( \ys ->
      minimum
      $
-     L.map (\(i,qi) -> closest m (n+i) qi xs) ys
+     L.map (\zs -> closest m (n+(minimum $ L.map fst zs)) (L.map snd zs) xs) ys
   )
   
 accTree :: Machine -> State -> [Message] -> Maybe InputTree
