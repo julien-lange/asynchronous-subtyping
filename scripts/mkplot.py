@@ -22,7 +22,7 @@ def fitfunc(x, a, b, c ):
 
 def mkPlot(bfile,outpath):
     tab = np.loadtxt(bfile,
-                         usecols=(0,5),
+                         usecols=(0,1,3),
                          unpack = True,
                          delimiter = ',',
                          dtype = float
@@ -30,7 +30,7 @@ def mkPlot(bfile,outpath):
 
     stab = tab[0].argsort()
     final = tab[:,stab]
-    tr,tk = final
+    tr,tm,tk = final
     # maxtr = max(tr)
 
     
@@ -62,7 +62,8 @@ def mkPlot(bfile,outpath):
     # pmin = comps[9]
     # pmax = comps[10]
 
-    preflegend = "Measured time" # "Time with "
+    preflegend = "Time" # "Time with "
+    memlegend = "Memory"
     legend = "" # "NA"
     # if int(xmin) != (int(xmax)-1):
     #     legend = "k="+ymin+", n=1..10, m="+pmin
@@ -72,19 +73,29 @@ def mkPlot(bfile,outpath):
     #     legend = "k="+ymin+", n="+xmin+", m=1..26"
     
     ax.plot(tr,tk,marker='.',markersize=mymarkersize,linestyle='None',color='blue')
-    
+
 
 
     plt.yticks(fontsize=ticksfontsize)
     plt.xticks(rotation=40, ha='right', fontsize=ticksfontsize)
     
+    plt.grid( linestyle='dotted', color='gray')
+
+    ax.set_ylabel('Time (seconds)', fontsize=axisfontsize)
 
     
-    plt.legend(
-         [r'$F(x)=%5.5f * %5.4f^x -%5.4f$' % tuple(popt),
-            preflegend+legend], loc='best',fontsize=legentfontsize)
+    ax2 = ax.twinx()
+    ax2.plot(tr, tm,marker='*',markersize=mymarkersize,linestyle='None',color='red')
+    ax2.set_ylabel('Memory (kbytes)', fontsize=axisfontsize)
 
-    plt.ylabel('Time (seconds)',fontsize=axisfontsize)
+    ax2.legend([memlegend],loc=(0.05,0.68),fontsize=legentfontsize)
+    
+
+    ax.legend(
+        [r'$F(x)=%5.5f * %5.4f^x -%5.4f$' % tuple(popt),
+         preflegend+legend,memlegend], loc=(0.05,0.8),fontsize=legentfontsize)
+
+
 
     plt.yscale('linear')
 
@@ -96,9 +107,6 @@ def mkPlot(bfile,outpath):
     plt.ticklabel_format(style='sci', axis='x',useOffset=True)
 
 
-    plt.rc('grid', linestyle='dotted', color='gray')
-
-    plt.grid()
 
     plt.savefig('./plots/'+outpath #bfile.replace(".","-")+posfifx
                     , dpi=300

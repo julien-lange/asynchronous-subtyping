@@ -10,7 +10,7 @@ import csv
 
 
 # Number of iterations (> 1)
-maxiterations = 3
+maxiterations = 5
 
 logfile = "log-file-benchmarks.txt"
 tmpfile = "tmp-cfsm.txt"
@@ -21,7 +21,7 @@ prefname = "parametrised-benchmarks"
 # TIMEOUT (in seconds)
 # cmdtimeout = 360
 # cmdtimeout = 1500 # 25 min
-cmdtimeout = 90 #
+cmdtimeout = 240 #
 
 
 
@@ -45,17 +45,17 @@ def runOverRange(sid,minx, maxx, gencmd):
                         for it in range(1,maxiterations):
                             print("Running Checker: ",str(x))
                             startt = time.time() # time in seconds
-                            kmccmd = subprocess.Popen(["../tool/Checker","m1.txt","m2.txt"], stdout=subprocess.PIPE)
+                            kmccmd = subprocess.Popen(["/usr/bin/time","-v","../tool/Checker","m1.txt","m2.txt"], stdout=subprocess.PIPE, stderr=subprocess.PIPE)
                             try:
                                 kmccmd.wait(timeout=cmdtimeout)
                                 endt = time.time()
                                 txt = "Measured execution time: "+str(endt-startt)
                                 print(txt)
-                                for line in kmccmd.stdout:
-                                    sp = line.decode("utf-8").split("*")
-                                    if len(sp) > 4:
-                                        nstates = sp[1]
-                                        ntrans = sp[3]
+                                for line in kmccmd.stderr:
+                                    sp = line.decode("utf-8").split(":")
+                                    if len(sp) > 1:
+                                        if (sp[0].find('Maximum resident set size') > 0):
+                                            nstates = sp[1].strip()                                           
                                     log_file.write(line)
                                 log_file.write((txt+"\n").encode())
                                 timings.append(endt-startt)
@@ -80,9 +80,6 @@ def moreAs(x):
 def moreBs(x):
     cmd = subprocess.Popen(["./GenAsyncTypes","1", str(x)], stdout=subprocess.PIPE)
     return cmd 
-
-
-
 
 runOverRange("A",1, 20, moreAs)
 runOverRange("B",1, 20, moreBs)
