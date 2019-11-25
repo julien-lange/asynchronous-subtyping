@@ -71,16 +71,18 @@ def runOverRange(sid,minx, maxx, gencmd):
 
 
 
-# Measure growing k with 10 peers
+
+
+def moreAs(x):
+    cmd = subprocess.Popen(["./GenAsyncTypes",str(x),"1"], stdout=subprocess.PIPE)
+    return cmd
 
 def moreBs(x):
     cmd = subprocess.Popen(["./GenAsyncTypes","1", str(x)], stdout=subprocess.PIPE)
     return cmd 
 
 
-def moreAs(x):
-    cmd = subprocess.Popen(["./GenAsyncTypes",str(x),"1"], stdout=subprocess.PIPE)
-    return cmd
+
 
 runOverRange("A",1, 20, moreAs)
 runOverRange("B",1, 20, moreBs)
