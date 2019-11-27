@@ -605,12 +605,12 @@ eqsToAutomata nomin envi t =
         comb a (Nothing) = Nothing
         mkSilentTrans src i (XVar v) = Just [(src, ((Send, i), printVar v))]
         mkSilentTrans src i t =  
-          let nt = src++"S"++(show i)
+          let nt = src++"S"++(i)
           in comb (src, ((Send, i), nt)) (mkTrans nt t)   
              
         mkReceiveTrans src a (XVar v) = Just [(src, ((Receive, a), printVar v))]
         mkReceiveTrans src a t = 
-          let nt = src++"R"++(show a)
+          let nt = src++"R"++(a)
           in comb (src, ((Receive, a), nt)) (mkTrans nt t)
 
         mkTrans :: String -> EInputTree -> Maybe [Transition]
