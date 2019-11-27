@@ -40,7 +40,7 @@ def runOverRange(sid,minx, maxx, gencmd):
                         print("Test: ",str(x))
                         gencmd(x)
                         timings = []
-                        nstates = ""
+                        nstates = []
                         ntrans = ""
                         for it in range(1,maxiterations):
                             print("Running Checker: ",str(x))
@@ -55,7 +55,7 @@ def runOverRange(sid,minx, maxx, gencmd):
                                     sp = line.decode("utf-8").split(":")
                                     if len(sp) > 1:
                                         if (sp[0].find('Maximum resident set size') > 0):
-                                            nstates = sp[1].strip()                                           
+                                            nstates.append(int(sp[1].strip()))
                                     log_file.write(line)
                                 log_file.write((txt+"\n").encode())
                                 timings.append(endt-startt)
@@ -66,7 +66,8 @@ def runOverRange(sid,minx, maxx, gencmd):
                                 print("/!\ Checker timedout, terminating these benchmarks")
                                 return
                         avg = sum(timings)/float(len(timings))
-                        write.writerow([x,nstates,ntrans,avg]+timings)
+                        avgmem = sum(nstates)/float(len(nstates))
+                        write.writerow([x,avgmem,ntrans,avg]+timings)
                             
 
 
@@ -80,6 +81,7 @@ def moreAs(x):
 def moreBs(x):
     cmd = subprocess.Popen(["./GenAsyncTypes","1", str(x)], stdout=subprocess.PIPE)
     return cmd 
+
 
 runOverRange("A",1, 20, moreAs)
 runOverRange("B",1, 20, moreBs)
