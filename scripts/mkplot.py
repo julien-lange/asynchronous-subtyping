@@ -51,8 +51,6 @@ def mkPlot(bfile,outpath):
 
    
     
-    ax.plot(lspace, fitfunc(lspace, *popt),color='orange') 
-
 
     # comps = bfile.split("-")
     # xmin = comps[3]
@@ -72,7 +70,7 @@ def mkPlot(bfile,outpath):
     # if int(pmin) != (int(pmax)-1):
     #     legend = "k="+ymin+", n="+xmin+", m=1..26"
     
-    ax.plot(tr,tk,marker='.',markersize=mymarkersize,linestyle='None',color='blue')
+
 
 
 
@@ -85,7 +83,13 @@ def mkPlot(bfile,outpath):
 
     
     ax2 = ax.twinx()
-    ax2.plot(tr, tm,marker='*',markersize=mymarkersize,linestyle='None',color='red')
+
+    
+    ax.plot(lspace, fitfunc(lspace, *popt),color='orange',zorder=10) 
+    ax.plot(tr,tk,marker='o',markersize=mymarkersize,linestyle='None',color='blue',zorder=20)
+    ax2.plot(tr, tm,marker='.',markersize=mymarkersize,linestyle='None',color='red',zorder=15)
+
+    
     ax2.set_ylabel('Memory (kbytes)', fontsize=axisfontsize)
 
     ax2.legend([memlegend],loc=(0.05,0.68),fontsize=legentfontsize)
@@ -96,10 +100,9 @@ def mkPlot(bfile,outpath):
          preflegend+legend,memlegend], loc=(0.05,0.8),fontsize=legentfontsize)
 
 
-
     plt.yscale('linear')
 
-    plt.xlabel( r'Number of branches',fontsize=axisfontsize)
+    ax.set_xlabel( r'Number of branches',fontsize=axisfontsize)
     plt.xscale('linear')
 
 
@@ -112,6 +115,7 @@ def mkPlot(bfile,outpath):
                     , dpi=300
                     , bbox_inches="tight"
                     , frameone=False)
+    
 
     # plt.show()
 

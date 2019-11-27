@@ -1,0 +1,1 @@
+rec X . !HQ; rec Y . [?OK;X, ?KO;!LQ;Y]

@@ -10,7 +10,7 @@ import csv
 
 
 # Number of iterations (> 1)
-maxiterations = 5
+maxiterations = 6
 
 logfile = "log-file-benchmarks.txt"
 tmpfile = "tmp-cfsm.txt"
