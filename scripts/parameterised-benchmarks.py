@@ -21,7 +21,7 @@ prefname = "parametrised-benchmarks"
 # TIMEOUT (in seconds)
 # cmdtimeout = 360
 # cmdtimeout = 1500 # 25 min
-cmdtimeout = 240 #
+cmdtimeout = 500 #
 
 
 
