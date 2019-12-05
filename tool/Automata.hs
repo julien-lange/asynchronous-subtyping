@@ -5,9 +5,12 @@ import Data.Set as S
 import Data.Map as M
 import Data.Char (toUpper)
 
+import Data.Hashable
 
 import qualified FiniteStateAutomata as FS
 import qualified Hopcroft as H
+import qualified Data.Text as T
+
 
 import Parser
 
@@ -15,7 +18,7 @@ import Parser
 import System.IO.Unsafe
 import Debug.Trace
 
-type Message = String
+type Message = String -- T.Text -- Int -- 
 type Label = (Direction, Message)
 type State = String
 type Transition = (State, (Label, State))
@@ -55,8 +58,8 @@ printMachine m =
                                 "; \n ") $ transitions m
   in header++(foldstring nodes)++(foldstring transi)++footer
   where foldstring s = L.foldr (++) "" s
-        mprintLabel (Send,a) = "!"++a
-        mprintLabel (Receive,a) = "?"++a
+        mprintLabel (Send,a) = "!"++(a)
+        mprintLabel (Receive,a) = "?"++(a)
 
 machine2file :: Machine -> String -> IO ()
 machine2file m f = writeToFile (f++"_cfsm.dot") (printMachine m)
@@ -68,6 +71,11 @@ genState s map (Var x) = case M.lookup x map of
   Nothing -> error $ "ill formed type"
 genState s map (Rec s' t) = genState s map t 
 genState s map t = s
+
+mkMessage :: String -> Message
+mkMessage s = s -- T.pack s
+
+
 
 
 stToUpper :: String -> String
@@ -374,7 +382,7 @@ type2Machine nomin s t = let nedges = L.nub $ genEdges ninit M.empty [] t
   where genEdges prev map acc (Rec s t) = genEdges prev (M.insert s prev map) acc t
         genEdges prev map acc (Act dir s t) = 
           let next = genState ((stToUpper prev)++(stToUpper s)) map t
-          in (prev, ((dir, s), next)):(genEdges next map acc t)
+          in (prev, ((dir, mkMessage s), next)):(genEdges next map acc t)
         genEdges prev map acc (Choice dir xs) = L.foldr (++) [] (L.map (genEdges prev map acc) xs)
         genEdges prev map acc (End) = []
         genEdges prev map acc (Var x) = []

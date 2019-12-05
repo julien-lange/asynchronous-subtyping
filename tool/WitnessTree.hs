@@ -1,3 +1,6 @@
+{-# LANGUAGE DeriveGeneric #-}
+
+
 module WitnessTree where
 
 import Parser
@@ -8,8 +11,11 @@ import System.Process
 
 import Data.List as L
 import Data.Set as S
+-- import Data.HashMap.Strict as M
 import Data.Map as M
 import Data.Maybe
+import GHC.Generics (Generic)
+import Data.Hashable
 
 
 -- DEBUG
@@ -20,14 +26,16 @@ import Debug.Trace
 
 data InputTree = Q State
                | T [(Message, InputTree)]
-                 deriving (Show, Eq, Ord)
+                 deriving (Show, Generic, Eq, Ord)
+
+instance Hashable InputTree where
 
                     
 data CTree = Node
              { label :: IValue
              , children :: [(TLabel, CTree)]
              }
-           deriving (Show, Eq, Ord)
+           deriving (Show, Eq)
                     
 
 type Value = (State, InputTree)
@@ -41,13 +49,11 @@ type Ancestors = Map IValue IValue
 data EInputTree = XVar XVariable
                 | E [(Message, EInputTree)]
                 | I [EInputTree]
-                deriving (Show, Eq, Ord)
+                deriving (Show, Eq)
                          
 type XVariable = (State, IValue) 
 
 type Envi= Map XVariable EInputTree
-
-
 
   
 allNodes :: CTree -> [IValue]
@@ -96,14 +102,14 @@ genProduceEnvi m ancs t = M.fromList $ (mkProdRoot t, mkEITRoot (label t) (snd $
 mkEITree :: Machine -> Ancestors -> State -> [TLabel] -> IValue -> Maybe EInputTree
 mkEITree m ancs q path leaf =
   do at <- accTree m q (sndProj path)
-     anc <- M.lookup leaf ancs
+     anc <- M.lookup (leaf) ancs
      return $ helper anc at
   where helper anc (Q q') = XVar (q', anc)
         helper anc (T xs) = E $ L.map (\(x,y) -> (x, helper anc y)) xs
 
 
 tr :: State -> Ancestors -> CTree -> Maybe EInputTree
-tr q ancs (Node n []) = (M.lookup n ancs) >>= (\x -> return $ XVar (q, x))
+tr q ancs (Node n []) = (M.lookup (n) ancs) >>= (\x -> return $ XVar (q, x))
 tr q ancs (Node n ys) = Just $ XVar (q, n)
 
 
@@ -141,7 +147,7 @@ genConsumeEnvi ancs t = M.fromList $ helper t
         helper (Node v xs) 
           | isSendTree xs = [(("", v), I $ L.map (\(n,t) -> XVar ("", (trsucc t))) xs)]++(cont xs)
           | otherwise = [(("", v), E $ L.map (\(n,t) -> (snd . snd $ n, XVar ("", (trsucc t)))) xs)]++(cont xs)
-        trsucc (Node v []) = case M.lookup v ancs of
+        trsucc (Node v []) = case M.lookup (v) ancs of
                               Nothing -> error $ "Variable "++(show v)++" not found in ancestors:\n"++(show ancs)++"."
                               Just a -> a
         trsucc (Node v xs) = v
@@ -234,9 +240,10 @@ minHeight :: InputTree -> Int
 minHeight t =  minimum $ L.map fst $ heightIT t 
 
 heightIT :: InputTree -> [(Int, State)]
-heightIT t = nub $ helper 0 t
-  where helper i (T xs) = concat $ L.map (helper (i+1) . snd) xs
-        helper i (Q q) = [(i,q)]
+heightIT t = nub $ helper 0 [] t  
+  where helper i acc (T xs) = concat $ L.map (helper (i+1) acc . snd) xs 
+        helper i acc (Q q) = (i,q):acc
+
 
 hasAccum :: InputTree -> Bool
 hasAccum (T xs) = True
@@ -327,11 +334,11 @@ addTree mp (T xs) = T $ L.map (\(a,t) -> (a, addTree mp t)) xs
 
 type TreeMap = Map IValue [(TLabel, CTree)]
 
-buildTree :: Machine -> Machine -> TreeMap -> [(IValue, TLabel)] -> String -> Value -> Maybe (TreeMap, CTree, Map IValue IValue)
+buildTree :: Machine -> Machine -> TreeMap -> [(IValue, TLabel)] -> String -> Value -> Maybe (TreeMap, CTree, Ancestors)
 buildTree m1 m2 sibs ps i val
   | val `L.elem` (L.map (snd . fst) ps) =
       let anc = fst . head $ L.filter (\((j,x),y) -> x == val) ps
-      in Just (M.empty, Node (i, val) [], M.singleton (i, val) anc)
+      in Just (M.empty, Node (i, val) [], M.singleton ((i, val)) anc)
          
   | val `L.elem` (L.map snd $ M.keys sibs) = 
         let sibling = head $ L.filter (\(j,x) -> x == val) $ M.keys sibs
@@ -342,7 +349,7 @@ buildTree m1 m2 sibs ps i val
   case getAncestorPair (L.map fst ps) (i,val) of
    Nothing -> cont
    Just (ni,nj) -> if extract (getIntermPath ps ni nj) (snd . snd $ ni) (snd val)
-                   then Just (M.empty, Node (i, val) [], M.singleton (i, val) ni)
+                   then Just (M.empty, Node (i, val) [], M.singleton ((i, val)) ni)
                    else cont
   where cont = case oneStep m1 m2 val of
           Nothing -> Nothing
@@ -425,7 +432,7 @@ mkPicture file output =
         return ()
 
 
-mkCandidateSubtrees :: Map IValue IValue -> CTree -> [CTree]
+mkCandidateSubtrees :: Ancestors -> CTree -> [CTree]
 mkCandidateSubtrees mp t = helper realancs t
   where helper ancs (Node v xs)
           | v `L.elem` ancs = [Node v xs]
@@ -439,7 +446,7 @@ isFinite m1 m2 mp t = helper [] t
   where helper _ (Node (i,v) []) =
           (isFinalConf m1 m2 v)
           ||
-          case M.lookup (i,v) mp of
+          case M.lookup ((i,v)) mp of
            Nothing -> False
            Just (j,n) -> n==v 
         helper seen (Node (i,v) xs)
@@ -517,37 +524,47 @@ strictAccumulation m mp t = helper (M.elems mp) t
   where helper ancs t@(Node n@(i,(p,it)) xs)
           | n `L.elem` ancs =
               let quants = [(qi, path, n', it) | (path, n') <- getAllPaths t, qi <- leavesIT it]
-              in and $ L.map 
-                 (\(qi,psi,n'@(i',(p',it')),it) -> 
-                   (
-                     case leavesIT <$> accTree m qi (sndProj psi) of
-                      Nothing -> False
-                      Just ss -> (S.fromList ss)
-                                 `isSubsetOf` 
-                                 (S.fromList $ leavesIT it')
-                   )
-                   &&
-                   (
-                     case closest m (minHeight it) qi (L.map snd psi) of
-                      Nothing -> False
-                      Just h -> h >= (minHeight it)
-                   )
-                 )
-                 quants
+                  leaves = leavesIT it
+                  paths = L.map (\(x1,x2,x3,x4) -> L.map snd x2) quants
+              in
+                (
+                  and $ L.map (\psi -> 
+                                 case closest m (minHeight it) leaves psi of
+                                   Nothing -> False
+                                   Just h -> h >= (minHeight it)
+                              )
+                  paths
+                )
+                &&
+                (
+                  and $ L.map 
+                  (\(qi,psi,n'@(i',(p',it')),it) -> 
+                     (
+                       case leavesIT <$> accTree m qi (sndProj psi) of
+                         Nothing -> False
+                         Just ss -> (S.fromList ss)
+                                    `isSubsetOf` 
+                                    (S.fromList $ leavesIT it')
+                     )                
+                  )
+                  quants
+                )
          
           | otherwise = and $ L.map ((helper ancs) . snd) xs
                         -- 
-                       
-closest :: Machine -> Int -> State -> [Label] -> Maybe Int
-closest m n q [] = Just n
-closest m n q ((Receive, a):xs) = closest m (n-1) q xs
-closest m n q ((Send, a):xs) =
-  (heightIT <$> accTree m q [a])
+-- /!\ This is minAcc() in the the paper!
+closest :: Machine -> Int -> [State] -> [Label] -> Maybe Int
+closest m n qs [] = Just n
+closest m n qs ((Receive, a):xs) = closest m (n-1) qs xs
+closest m n qs ((Send, a):xs) =
+  (
+    sequence $ L.map (\q -> (heightIT <$> accTree m q [a])) qs
+  )
   >>=
   ( \ys ->
      minimum
      $
-     L.map (\(i,qi) -> closest m (n+i) qi xs) ys
+     L.map (\zs -> closest m (n+(minimum $ L.map fst zs)) (L.map snd zs) xs) ys
   )
   
 accTree :: Machine -> State -> [Message] -> Maybe InputTree
@@ -588,12 +605,12 @@ eqsToAutomata nomin envi t =
         comb a (Nothing) = Nothing
         mkSilentTrans src i (XVar v) = Just [(src, ((Send, i), printVar v))]
         mkSilentTrans src i t =  
-          let nt = src++"S"++i
+          let nt = src++"S"++(i)
           in comb (src, ((Send, i), nt)) (mkTrans nt t)   
              
         mkReceiveTrans src a (XVar v) = Just [(src, ((Receive, a), printVar v))]
         mkReceiveTrans src a t = 
-          let nt = src++"R"++a
+          let nt = src++"R"++(a)
           in comb (src, ((Receive, a), nt)) (mkTrans nt t)
 
         mkTrans :: String -> EInputTree -> Maybe [Transition]
@@ -601,14 +618,14 @@ eqsToAutomata nomin envi t =
           case M.lookup v envi of
           Nothing -> trace ("Variable "++(show v)++" not found.") -- in\n"++(show envi)++".")
                      Nothing
-          Just vv -> Just [(src, ((Send, "_tau_"), printVar v))] 
+          Just vv -> Just [(src, ((Send, mkMessage "0"), printVar v))] 
         mkTrans src (E xs) =
           concat <$> 
           (sequence $ L.map (\(ai,ti) -> mkReceiveTrans src ai ti) xs)
         mkTrans src (I xs) =
           concat <$>
           (sequence $
-           snd $ L.mapAccumL (\i ti -> (i+1, mkSilentTrans src (show i) ti)) 0 xs)
+           snd $ L.mapAccumL (\i ti -> (i+1, mkSilentTrans src (mkMessage $ show i) ti)) 0 xs)
         reachableStates trans seen [] = seen
         reachableStates trans seen (src:xs)
           | src `L.elem` seen = reachableStates trans seen xs
@@ -680,9 +697,9 @@ printGraph i init edges ancestors =
       nmap = mkNodeMap i nodes
       snodes = intercalate "\n" $ L.map (printNode nmap) nodes
       sedges = intercalate "\n" $ L.map (printEdge nmap) edges
-      ancs =  intercalate "\n" $ L.map (printAncestorEdge nmap) $
-              L.filter (\(t,s) -> (t `L.elem` nodes) && (s `L.elem` nodes)) $
-              M.toList ancestors
+      ancs = intercalate "\n" $ L.map (printAncestorEdge nmap) $
+             L.filter (\(t,s) -> (t `L.elem` nodes) && (s `L.elem` nodes)) $
+             M.toList ancestors
   in snodes++"\n"
      ++sedges++"\n"
      ++ancs++"\n"
@@ -705,9 +722,9 @@ printTrees ancs list =  "digraph CTs { \n"++(helper $ snd $ mapAccumL (\x y -> (
                            
 
 printEdgeLabel :: TLabel -> String
-printEdgeLabel (True, (Send, msg)) = "!"++msg
-printEdgeLabel (True, (Receive, msg)) = "?"++msg
-printEdgeLabel (False, (_, msg)) = "["++msg++"]"
+printEdgeLabel (True, (Send, msg)) = "!"++(msg)
+printEdgeLabel (True, (Receive, msg)) = "?"++(msg)
+printEdgeLabel (False, (_, msg)) = "["++(msg)++"]"
 
 
 
