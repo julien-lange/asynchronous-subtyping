@@ -69,4 +69,4 @@ the corresponding terminal output and `.png` files (prefixed by `rev_`) will be 
 
 ## Running the tests
 
-In the 'script' sub-directory, run `./runtest.py`. This will print the results of 174 tests. For reference, the current version (18/04/2019) prints the results in `scripts/latest-tests.txt`.
+In the 'script' sub-directory, run `./runtest.py`. This will print the results of 174 tests. For reference, the current version (05/12/2019) prints the results in `scripts/latest-tests.txt`.
