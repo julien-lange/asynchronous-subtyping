@@ -1,5 +1,6 @@
 # A sound algorithm for asynchronous session subtyping
 
+This is an implementation of the algorithm given in the paper *[A Sound Algorithm for Asynchronous Session Subtyping](http://drops.dagstuhl.de/opus/volltexte/2019/10940/)* (CONCUR'19) by	Mario Bravetti, Marco Carbone, Julien Lange, Nobuko Yoshida, and Gianluigi Zavattaro.
 
 ## Requirements:
 
