@@ -53,7 +53,7 @@ def runtest(myfile, fun, outcome,a,b,c):
                         fail +=1
                         print bcolors.WARNING
                         print "\t Unexpected outcome for:"
-                        print "\t ./Checker", "-T", sub, sup, row[c],"+RTS -N2"
+                        print "\t ",tool, sub, sup
                         print "\t The tool says",fun(currentlist),"and we expected",outcome
                         print bcolors.ENDC
         print bcolors.BOLD + "Failed:",(fail),"/ Unknown:",(unk)

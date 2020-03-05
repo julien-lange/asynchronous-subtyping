@@ -271,13 +271,14 @@ inTree m q
 
 isFinalConf :: Machine -> Machine -> Value -> Bool
 isFinalConf m1 m2 (p, it) = (not $ hasAccum it) && (isFinal m1 p) && (isFinal m2 (uniqueState it))
-          
-oneStep :: Machine -> Machine -> Value -> Maybe [(TLabel, Value)]
-oneStep m1 m2 (p, it)
+
+
+oneStep :: ((Set Message) -> (Set Message) -> Bool) -> Machine -> Machine -> Value -> Maybe [(TLabel, Value)]
+oneStep setpred m1 m2 (p, it)
   | isFinalConf m1 m2 (p,it) = Just []
       --
   | (not $ hasAccum it) && (isInput m1 p) && (isInput m2 (uniqueState it))
-    && ((inBarb m2 (uniqueState it)) == (inBarb m1 p)) =
+    && ((inBarb m2 (uniqueState it)) `setpred` (inBarb m1 p)) =
       let  psmoves = L.map snd $ L.filter (\(x,(y,z)) -> x==p) $ transitions m1
            qsmoves = L.map snd $ L.filter (\(x,(y,z)) -> x==(uniqueState it)) $ transitions m2               
            next = L.nub $ [(x,y,a) | (a,x) <- psmoves, (b,y) <- qsmoves, a==b]
@@ -287,7 +288,7 @@ oneStep m1 m2 (p, it)
       in Just npairs
          --
   | (not $ hasAccum it) &&  (isOutput m1 p) && (isOutput m2 (uniqueState it))
-    && ((outBarb m1 p) == (outBarb m2 (uniqueState it))) =
+    && ((outBarb m1 p) `setpred` (outBarb m2 (uniqueState it))) =
       let psmoves = L.map snd $ L.filter (\(x,(y,z)) -> x==p) $ transitions m1              
           qsmoves = L.map snd $ L.filter (\(x,(y,z)) -> x==(uniqueState it)) $ transitions m2
           next = L.nub $ [(x,y,a) | (a,x) <- psmoves, (b,y) <- qsmoves, a==b]
@@ -296,7 +297,7 @@ oneStep m1 m2 (p, it)
                          ) next
       in Just npairs
          --
-  | (hasAccum it) && (isInput m1 p) && ((frontIT it) == (inBarb m1 p)) =
+  | (hasAccum it) && (isInput m1 p) && ((frontIT it) `setpred` (inBarb m1 p)) =
       let psmoves = L.map snd $ L.filter (\(x,(y,z)) -> x==p) $ transitions m1
           npairs = L.map (\y -> 
                            ((True, (Receive, y)), (successor m1 p (Receive, y), nextIT it y))
@@ -316,7 +317,7 @@ oneStep m1 m2 (p, it)
                        npairs =  L.map (\(y,z) -> 
                                          ((True, y), (z, succInTree m2 y $ addTree itmap it))
                                        ) psmoves
-                  in if and $ L.map (\x -> (outBarb m1 p) == (outBarb m2 x)) qjhs
+                  in if and $ L.map (\x -> (outBarb m1 p) `setpred` (outBarb m2 x)) qjhs
                      then Just npairs
                      else Nothing
   | otherwise = Nothing
@@ -351,7 +352,7 @@ buildTree m1 m2 sibs ps i val
    Just (ni,nj) -> if extract (getIntermPath ps ni nj) (snd . snd $ ni) (snd val)
                    then Just (M.empty, Node (i, val) [], M.singleton ((i, val)) ni)
                    else cont
-  where cont = case oneStep m1 m2 val of
+  where cont = case oneStep (==) m1 m2 val of -- isSubsetOf for co/contra-variance
           Nothing -> Nothing
           Just next -> let rets = snd $ mapAccumL
                                   (\(j,sbs) (x,y) -> 
