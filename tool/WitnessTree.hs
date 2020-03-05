@@ -287,7 +287,7 @@ oneStep m1 m2 (p, it)
       in Just npairs
          --
   | (not $ hasAccum it) &&  (isOutput m1 p) && (isOutput m2 (uniqueState it))
-    && ((outBarb m1 p) `isSubsetOf` (outBarb m2 (uniqueState it))) =
+    && ((outBarb m1 p) == (outBarb m2 (uniqueState it))) =
       let psmoves = L.map snd $ L.filter (\(x,(y,z)) -> x==p) $ transitions m1              
           qsmoves = L.map snd $ L.filter (\(x,(y,z)) -> x==(uniqueState it)) $ transitions m2
           next = L.nub $ [(x,y,a) | (a,x) <- psmoves, (b,y) <- qsmoves, a==b]
@@ -296,14 +296,14 @@ oneStep m1 m2 (p, it)
                          ) next
       in Just npairs
          --
-  | (hasAccum it) && (isInput m1 p) && ((frontIT it) `isSubsetOf`  (inBarb m1 p)) =
+  | (hasAccum it) && (isInput m1 p) && ((frontIT it) ==  (inBarb m1 p)) =
       let psmoves = L.map snd $ L.filter (\(x,(y,z)) -> x==p) $ transitions m1
           npairs = L.map (\y -> 
                            ((True, (Receive, y)), (successor m1 p (Receive, y), nextIT it y))
                          ) (S.toList $ frontIT it)
       in Just npairs
          --
-  | (isOutput m1 p) && (ampersand Send m1 p) = 
+  | (isOutput m1 p) = -- && (ampersand Send m1 p) = 
     let tmpmap = L.map (\qi -> case  inTree m2 qi of
                                              Nothing -> Nothing
                                              Just t -> Just (qi, t)
@@ -316,7 +316,7 @@ oneStep m1 m2 (p, it)
                        npairs =  L.map (\(y,z) -> 
                                          ((True, y), (z, succInTree m2 y $ addTree itmap it))
                                        ) psmoves
-                  in if and $ L.map (\x -> (outBarb m1 p) `isSubsetOf` (outBarb m2 x)) qjhs
+                  in if and $ L.map (\x -> (outBarb m1 p) == (outBarb m2 x)) qjhs
                      then Just npairs
                      else Nothing
   | otherwise = Nothing

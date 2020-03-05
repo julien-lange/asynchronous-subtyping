@@ -61,10 +61,10 @@ def mkPlot(bfile,outpath):
 
     ax.set_ylabel('Time (seconds)', fontsize=axisfontsize)
 
-    plt.yscale('log')
+    #plt.yscale('log')
     
     ax2 = ax.twinx()
-    ax2.set_yscale("log")
+    #ax2.set_yscale("log")
 
     
     ax.plot(linspace, fitfunc(linspace, *popt),color='orange',zorder=10)  #, linestyle='None',marker='.') 
