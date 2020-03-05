@@ -277,7 +277,7 @@ oneStep m1 m2 (p, it)
   | isFinalConf m1 m2 (p,it) = Just []
       --
   | (not $ hasAccum it) && (isInput m1 p) && (isInput m2 (uniqueState it))
-    && ((inBarb m2 (uniqueState it)) `isSubsetOf` (inBarb m1 p)) =
+    && ((inBarb m2 (uniqueState it)) == (inBarb m1 p)) =
       let  psmoves = L.map snd $ L.filter (\(x,(y,z)) -> x==p) $ transitions m1
            qsmoves = L.map snd $ L.filter (\(x,(y,z)) -> x==(uniqueState it)) $ transitions m2               
            next = L.nub $ [(x,y,a) | (a,x) <- psmoves, (b,y) <- qsmoves, a==b]
@@ -296,7 +296,7 @@ oneStep m1 m2 (p, it)
                          ) next
       in Just npairs
          --
-  | (hasAccum it) && (isInput m1 p) && ((frontIT it) ==  (inBarb m1 p)) =
+  | (hasAccum it) && (isInput m1 p) && ((frontIT it) == (inBarb m1 p)) =
       let psmoves = L.map snd $ L.filter (\(x,(y,z)) -> x==p) $ transitions m1
           npairs = L.map (\y -> 
                            ((True, (Receive, y)), (successor m1 p (Receive, y), nextIT it y))
