@@ -255,7 +255,7 @@ uniqueState _ =  error $ "[WitnessTree] InputTree is not empty! (uniqueState)"
 
 inTree :: Machine -> State -> Maybe InputTree
 inTree m q
-  | not (ampersand Receive m q) = Nothing
+  | not (ampersand Receive m q) = Nothing --  /!\ What to do here?
   | (inBarb m q) == S.empty = Just $ Q q
   | otherwise =
       let qs = L.map snd $ L.filter (\(x,(y,z)) -> x==q) $ transitions m
