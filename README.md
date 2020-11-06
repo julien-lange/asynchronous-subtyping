@@ -79,6 +79,6 @@ In the 'script' sub-directory, run `./runtest.py`. This will print the results o
 ## Graphical outputs
 
 Here is an example of  `simulation_tree.png`:
-![Example of simulation tree](./simulation_tree.png  | width=100)
+![Example of simulation tree](./simulation_tree.png  =100x)
 
 See [this file](./sample-outputs.zip) for other samples of graphical ouputs.
