@@ -56,10 +56,6 @@ When you set the `--pics` flag, the tool generates the following files in the cu
 * for each candidate subtree `i`, there will be a pair of files `pti.png` and `cti.png` which are graphical representations of the systems of equations.
 
 
-Here is an example of  `simulation_tree.png` :
-![Example of simulation tree](./simulation_tree.png).
-
-See [this file](./sample-outputs.zip) for a sample of graphical ouputs.
 
 It will also print something like:
 
@@ -74,6 +70,15 @@ If the first pass is inconclusive (i.e., the tool says *Maybe*), then
 another pass is executed to check `dual(T2) < dual(T1)`. In this case,
 the corresponding terminal output and `.png` files (prefixed by `rev_`) will be produced.
 
+
 ## Running the tests
 
 In the 'script' sub-directory, run `./runtest.py`. This will print the results of 174 tests. For reference, the current version (05/12/2019) prints the results in `scripts/latest-tests.txt`.
+
+
+## Graphical outputs
+
+Here is an example of  `simulation_tree.png`:
+![Example of simulation tree](./simulation_tree.png  | width=100)
+
+See [this file](./sample-outputs.zip) for other samples of graphical ouputs.
