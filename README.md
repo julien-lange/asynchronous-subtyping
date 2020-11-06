@@ -55,6 +55,8 @@ When you set the `--pics` flag, the tool generates the following files in the cu
 * `candidate_trees.png` is the list of candidate subtrees
 * for each candidate subtree `i`, there will be a pair of files `pti.png` and `cti.png` which are graphical representations of the systems of equations.
 
+See [this file for a sample of graphical ouputs](./sample-outputs.zip).
+
 It will also print something like:
 
 ```
